@@ -44,15 +44,18 @@ const main = async ({ github, context }) => {
         // console.log('gitlog3', github.log.debug(new Date().toTimeString()));
         // console.log(core.setOutput('timesssssssssssss', new Date().toTimeString()));
         // プルリクエストの情報を取得
+        console.log(`start.`);
         const prNumber = context.payload.pull_request?.number;
         if (!prNumber) {
             throw new Error('Pull request number not found.');
         }
+        console.log(`start.${prNumber}`);
         // プルリクエストの情報を取得してマージメッセージを取得
         const pr = await github.rest.pulls.get({
             ...context.repo,
             pull_number: prNumber,
         });
+        console.log(`start.${pr}`);
         const mergeMessage = pr.data.title; // 例としてプルリクエストのタイトルをマージメッセージとする
         // プルリクエストにマージメッセージを反映させる
         await github.rest.pulls.update({
