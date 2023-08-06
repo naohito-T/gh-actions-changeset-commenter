@@ -6,6 +6,8 @@ on:
       - "packages/**"
       - "!**.md"
 
+permissions: write-all
+
 jobs:
   check-build:
     strategy:

@@ -46,8 +46,10 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
       pull_number: prNumber,
     });
 
-    console.log(`start.${pr}`);
+    console.log(`start.${JSON.stringify(pr)}`);
     const mergeMessage = pr.data.title; // 例としてプルリクエストのタイトルをマージメッセージとする
+
+    console.log(`start.${mergeMessage}`);
 
     // プルリクエストにマージメッセージを反映させる
     await github.rest.pulls.update({
