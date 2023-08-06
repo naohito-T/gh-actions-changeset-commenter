@@ -18,7 +18,7 @@
     "packages/templates"
   ],
   "scripts": {
-    "all:build": "yarn workspaces build",
+    "all:build": "yarn workspaces run build",
     "c:build": "yarn workspace commenter build",
     "t:build": "yarn workspace templates build"
   }

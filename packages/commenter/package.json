@@ -2,7 +2,7 @@
   "name": "commenter",
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
-  "main": "index.js",
+  "main": "../../dist/commenter/src/main.js",
   "keywords": [
     "utils",
     "github actions",
@@ -14,16 +14,15 @@
   "license": "MIT",
   "scripts": {
     "t:check": "tsc --noEmit",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc && ncc build"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",
     "@vercel/ncc": "^0.36.1",
     "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1"
   }
 }
