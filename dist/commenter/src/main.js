@@ -27,7 +27,7 @@ const core = __importStar(require("@actions/core"));
 const wait_1 = require("./wait");
 const run = async () => {
     try {
-        const msString = core.getInput('milliseconds') ?? '1';
+        const msString = core.getInput('milliseconds') || '1';
         core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         const ms = parseInt(msString, 10);
         if (isNaN(ms)) {

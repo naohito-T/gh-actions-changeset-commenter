@@ -34,7 +34,7 @@ const core = __importStar(__nccwpck_require__(117));
 const wait_1 = __nccwpck_require__(411);
 const run = async () => {
     try {
-        const msString = core.getInput('milliseconds') ?? '1';
+        const msString = core.getInput('milliseconds') || '1';
         core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         const ms = parseInt(msString, 10);
         if (isNaN(ms)) {
