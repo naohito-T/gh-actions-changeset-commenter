@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "target": "esnext",
-    "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
     "strict": true,
     "outDir": "./dist",
     "experimentalDecorators": true,
-    "esModuleInterop": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": false,
