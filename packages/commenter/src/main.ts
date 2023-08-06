@@ -3,11 +3,17 @@ import { wait } from './wait';
 
 const run = async (): Promise<void> => {
   try {
-    const ms: string = core.getInput('milliseconds');
-    core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const msString: string = core.getInput('milliseconds');
+    core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+
+    const ms: number = parseInt(msString, 10);
+
+    if (isNaN(ms)) {
+      throw new Error('milliseconds not a number');
+    }
 
     core.debug(new Date().toTimeString());
-    await wait(parseInt(ms, 10));
+    await wait(ms);
     core.debug(new Date().toTimeString());
 
     core.setOutput('time', new Date().toTimeString());

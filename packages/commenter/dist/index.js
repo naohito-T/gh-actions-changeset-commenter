@@ -34,10 +34,14 @@ const core = __importStar(__nccwpck_require__(117));
 const wait_1 = __nccwpck_require__(411);
 const run = async () => {
     try {
-        const ms = core.getInput('milliseconds');
-        core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+        const msString = core.getInput('milliseconds');
+        core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+        const ms = parseInt(msString, 10);
+        if (isNaN(ms)) {
+            throw new Error('milliseconds not a number');
+        }
         core.debug(new Date().toTimeString());
-        await (0, wait_1.wait)(parseInt(ms, 10));
+        await (0, wait_1.wait)(ms);
         core.debug(new Date().toTimeString());
         core.setOutput('time', new Date().toTimeString());
     }
