@@ -11,26 +11,10 @@ type GitHubContext = {
 
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
- * @note デバッグはシークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
+ * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
 export const main = async ({ github, context }: GitHubContext): Promise<void> => {
   try {
-    // console.log('github ggg', github);
-    // console.log('context ggg', context);
-    // const msString: string = core.getInput('milliseconds') || '1';
-    // console.log(inspect('gitlog', github.log.debug(`Waiting ${msString} milliseconds ...`)));
-
-    // const ms: number = parseInt(msString, 10);
-
-    // if (isNaN(ms)) {
-    //   throw new Error('milliseconds not a number');
-    // }
-
-    // console.log('gitlog2', github.log.debug(new Date().toTimeString()));
-    // await wait(ms);
-    // console.log('gitlog3', github.log.debug(new Date().toTimeString()));
-
-    // console.log(core.setOutput('timesssssssssssss', new Date().toTimeString()));
     // プルリクエストの情報を取得
     console.log(`start.`);
     const prNumber = context.payload.pull_request?.number;
@@ -47,7 +31,7 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
     });
 
     console.log(`start.${JSON.stringify(pr)}`);
-    const mergeMessage = pr.data.title; // 例としてプルリクエストのタイトルをマージメッセージとする
+    const mergeMessage = pr.data.title;
 
     console.log(`start.${mergeMessage}`);
 
