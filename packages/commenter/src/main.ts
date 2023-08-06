@@ -3,8 +3,7 @@ import { wait } from './wait';
 
 const run = async (): Promise<void> => {
   try {
-    // const msString: string = core.getInput('milliseconds') ?? '1';
-    const msString: string = '1';
+    const msString: string = core.getInput('milliseconds') ?? '1';
     core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
     const ms: number = parseInt(msString, 10);
