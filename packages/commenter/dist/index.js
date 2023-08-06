@@ -38,15 +38,15 @@ const main = async ({ github, context }) => {
         console.log('github ggg', github);
         console.log('context ggg', context);
         const msString = core.getInput('milliseconds') || '1';
-        github.log.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+        console.log('gitlog', github.log.debug(`Waiting ${msString} milliseconds ...`)); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         const ms = parseInt(msString, 10);
         if (isNaN(ms)) {
             throw new Error('milliseconds not a number');
         }
-        github.log.debug(new Date().toTimeString());
+        console.log('gitlog2', github.log.debug(new Date().toTimeString()));
         await (0, wait_1.wait)(ms);
-        github.log.debug(new Date().toTimeString());
-        core.setOutput('timesssssssssssss', new Date().toTimeString());
+        console.log('gitlog3', github.log.debug(new Date().toTimeString()));
+        console.log(core.setOutput('timesssssssssssss', new Date().toTimeString()));
     }
     catch (e) {
         if (e instanceof Error)
