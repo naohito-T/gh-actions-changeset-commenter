@@ -1,0 +1,34 @@
+name: Check build
+
+on:
+  pull_request:
+    paths:
+      - "packages/**"
+      - "!**.md"
+
+jobs:
+  check-build:
+    strategy:
+      matrix:
+        node-version: [16.19.1]
+        os: [ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Composite Setup node
+        uses: ./.github/actions/setup/node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build check
+        run: yarn all:build
+
+      - uses: actions/github-script@v6
+        name: test actions
+        with:
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/commenter/src/main.js`)
+            console.log(script({github, context}))
