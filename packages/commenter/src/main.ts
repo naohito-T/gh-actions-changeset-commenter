@@ -4,7 +4,7 @@ import { GitHub } from '@actions/github/lib/utils';
 import { wait } from './wait';
 
 type GitHubContext = {
-  github: typeof GitHub;
+  github: InstanceType<typeof GitHub>;
   context: typeof context;
 };
 
@@ -13,7 +13,7 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
     console.log('github ggg', github);
     console.log('context ggg', context);
     const msString: string = core.getInput('milliseconds') || '1';
-    core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    github.log.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
     const ms: number = parseInt(msString, 10);
 
@@ -21,12 +21,12 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
       throw new Error('milliseconds not a number');
     }
 
-    core.debug(new Date().toTimeString());
+    github.log.debug(new Date().toTimeString());
     await wait(ms);
-    core.debug(new Date().toTimeString());
+    github.log.debug(new Date().toTimeString());
 
-    core.setOutput('time', new Date().toTimeString());
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message);
+    core.setOutput('timesssssssssssss', new Date().toTimeString());
+  } catch (e: unknown) {
+    if (e instanceof Error) core.setFailed(e.message);
   }
 };

@@ -31,19 +31,19 @@ const main = async ({ github, context }) => {
         console.log('github ggg', github);
         console.log('context ggg', context);
         const msString = core.getInput('milliseconds') || '1';
-        core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+        github.log.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         const ms = parseInt(msString, 10);
         if (isNaN(ms)) {
             throw new Error('milliseconds not a number');
         }
-        core.debug(new Date().toTimeString());
+        github.log.debug(new Date().toTimeString());
         await (0, wait_1.wait)(ms);
-        core.debug(new Date().toTimeString());
-        core.setOutput('time', new Date().toTimeString());
+        github.log.debug(new Date().toTimeString());
+        core.setOutput('timesssssssssssss', new Date().toTimeString());
     }
-    catch (error) {
-        if (error instanceof Error)
-            core.setFailed(error.message);
+    catch (e) {
+        if (e instanceof Error)
+            core.setFailed(e.message);
     }
 };
 exports.main = main;
