@@ -8,7 +8,7 @@ interface GitHubContext {
   context: typeof context;
 }
 
-export const run = async ({ github, context }: GitHubContext): Promise<void> => {
+module.exports = async ({ github, context }: GitHubContext): Promise<void> => {
   try {
     console.log('github ggg', github);
     console.log('context ggg', context);

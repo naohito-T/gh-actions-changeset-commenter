@@ -2,7 +2,7 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 721:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ (function(module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -30,10 +30,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
 const core = __importStar(__nccwpck_require__(117));
 const wait_1 = __nccwpck_require__(411);
-const run = async ({ github, context }) => {
+module.exports = async ({ github, context }) => {
     try {
         console.log('github ggg', github);
         console.log('context ggg', context);
@@ -53,7 +52,6 @@ const run = async ({ github, context }) => {
             core.setFailed(error.message);
     }
 };
-exports.run = run;
 
 
 /***/ }),
