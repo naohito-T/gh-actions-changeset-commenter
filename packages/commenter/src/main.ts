@@ -13,7 +13,7 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
     console.log('github ggg', github);
     console.log('context ggg', context);
     const msString: string = core.getInput('milliseconds') || '1';
-    github.log.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    console.log(github.log.debug(`Waiting ${msString} milliseconds ...`)); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
     const ms: number = parseInt(msString, 10);
 
@@ -25,7 +25,7 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
     await wait(ms);
     github.log.debug(new Date().toTimeString());
 
-    core.setOutput('timesssssssssssss', new Date().toTimeString());
+    console.log(core.setOutput('timesssssssssssss', new Date().toTimeString()));
   } catch (e: unknown) {
     if (e instanceof Error) core.setFailed(e.message);
   }
