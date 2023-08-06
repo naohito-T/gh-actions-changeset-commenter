@@ -69,7 +69,7 @@ const main = async ({ github, context }) => {
         await github.rest.pulls.update({
             ...context.repo,
             pull_number: prNumber,
-            body: mergeMessage,
+            body: `${mergeMessage} test sample`,
         });
         console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
     }
