@@ -1,8 +1,17 @@
 import * as core from '@actions/core';
+import { context } from '@actions/github';
+import { GitHub } from '@actions/github/lib/utils';
 import { wait } from './wait';
 
-const run = async (): Promise<void> => {
+interface GitHubContext {
+  github: typeof GitHub;
+  context: typeof context;
+}
+
+export const run = async ({ github, context }: GitHubContext): Promise<void> => {
   try {
+    console.log('github ggg', github);
+    console.log('context ggg', context);
     const msString: string = core.getInput('milliseconds') || '1';
     core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
@@ -21,5 +30,3 @@ const run = async (): Promise<void> => {
     if (error instanceof Error) core.setFailed(error.message);
   }
 };
-
-run();

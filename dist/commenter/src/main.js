@@ -23,10 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.run = void 0;
 const core = __importStar(require("@actions/core"));
 const wait_1 = require("./wait");
-const run = async () => {
+const run = async ({ github, context }) => {
     try {
+        console.log('github ggg', github);
+        console.log('context ggg', context);
         const msString = core.getInput('milliseconds') || '1';
         core.debug(`Waiting ${msString} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         const ms = parseInt(msString, 10);
@@ -43,4 +46,4 @@ const run = async () => {
             core.setFailed(error.message);
     }
 };
-run();
+exports.run = run;
