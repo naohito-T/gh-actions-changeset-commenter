@@ -8,6 +8,13 @@ actions/GitHub-scriptから使用するスクリプト群
 
 ## Getting start.
 
+
+```sh
+# In root directory
+$ yarn install
+```
+
+
 build file in copy
 
 or

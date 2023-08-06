@@ -1,0 +1,25 @@
+{
+  "name": "gh-actions-utils-scripts",
+  "version": "1.0.0",
+  "description": "It is assumed to be used in actions/GitHub-script.",
+  "private": "true",
+  "main": "./dist/main.js",
+  "keywords": [
+    "utils",
+    "github actions",
+    "submodules",
+    "TypeScript",
+    "JavaScript"
+  ],
+  "author": "naohito-T",
+  "license": "MIT",
+  "workspaces": [
+    "packages/commenter",
+    "packages/templates"
+  ],
+  "scripts": {
+    "all:build": "yarn workspaces build",
+    "c:build": "yarn workspace commenter build",
+    "t:build": "yarn workspace templates build"
+  }
+}
