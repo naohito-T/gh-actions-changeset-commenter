@@ -32,4 +32,3 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/dist/commenter/src/main.js`)
             console.log(script({github, context}))
-          milliseconds: 1
