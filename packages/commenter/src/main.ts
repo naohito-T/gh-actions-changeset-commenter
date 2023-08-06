@@ -3,12 +3,12 @@ import { context } from '@actions/github';
 import { GitHub } from '@actions/github/lib/utils';
 import { wait } from './wait';
 
-interface GitHubContext {
+type GitHubContext = {
   github: typeof GitHub;
   context: typeof context;
-}
+};
 
-module.exports = async ({ github, context }: GitHubContext): Promise<void> => {
+export const main = async ({ github, context }: GitHubContext): Promise<void> => {
   try {
     console.log('github ggg', github);
     console.log('context ggg', context);

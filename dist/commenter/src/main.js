@@ -23,9 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.main = void 0;
 const core = __importStar(require("@actions/core"));
 const wait_1 = require("./wait");
-module.exports = async ({ github, context }) => {
+const main = async ({ github, context }) => {
     try {
         console.log('github ggg', github);
         console.log('context ggg', context);
@@ -45,3 +46,4 @@ module.exports = async ({ github, context }) => {
             core.setFailed(error.message);
     }
 };
+exports.main = main;
