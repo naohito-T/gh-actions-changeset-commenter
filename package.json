@@ -18,8 +18,32 @@
     "packages/templates"
   ],
   "scripts": {
-    "all:build": "yarn workspaces run build",
+    "c:t:check": "tsc --noEmit -p ./packages/commenter/tsconfig.json",
+    "t:t:check": "tsc --noEmit -p ./packages/templates/tsconfig.json",
+
+    "c:l:check": "eslint --max-warnings 0 ./packages/commenter",
+    "t:l:check": "eslint  --max-warnings 0 ./packages/templates",
+
+    "c:p:check": "prettier -c './packages/commenter/**/*.{js,jsx,ts,tsx,json}'",
+    "t:p:check": "prettier -c './packages/templates/**/*.{js,jsx,ts,tsx,json}'",
+
+    "c:p:write": "prettier -w './packages/commenter/**/*.{js,jsx,ts,tsx,json}'",
+    "t:p:write": "prettier -w './packages/templates/**/*.{js,jsx,ts,tsx,json}'",
+
     "c:build": "yarn workspace commenter build",
-    "t:build": "yarn workspace templates build"
+    "t:build": "yarn workspace templates build",
+    "all:t:check": "run-p c:t:check t:t:check",
+    "all:build": "yarn workspaces run build",
+    "all:lint": "run-p "
+
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "@vercel/ncc": "^0.36.1",
+    "eslint": "^8.46.0",
+    "jest": "^29.6.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
   }
 }

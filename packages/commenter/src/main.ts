@@ -1,13 +1,7 @@
 import * as core from '@actions/core';
-import { context } from '@actions/github';
-import { GitHub } from '@actions/github/lib/utils';
-import { wait } from './wait';
-import { inspect } from 'util';
 
-type GitHubContext = {
-  github: InstanceType<typeof GitHub>;
-  context: typeof context;
-};
+import { GitHubContext } from '@/types'
+import { inspect } from 'util';
 
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
