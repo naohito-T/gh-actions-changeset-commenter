@@ -4,5 +4,5 @@ pre-commit:
     build:
       files: git diff --name-only HEAD | grep "packages/" || echo ''
       root: "./"
-      glob: "**/*.{js,ts,jsx,tsx}"
+      glob: "packages/**/*.{js,ts,jsx,tsx}"
       run: yarn all:build
