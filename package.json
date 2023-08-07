@@ -15,7 +15,8 @@
   "license": "MIT",
   "workspaces": [
     "packages/commenter",
-    "packages/templates"
+    "packages/templates",
+    "packages/gh-action-utils-script-core"
   ],
   "scripts": {
     "c:t:check": "tsc --noEmit -p ./packages/commenter/tsconfig.json",

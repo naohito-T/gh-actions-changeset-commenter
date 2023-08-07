@@ -1,8 +1,8 @@
 {
-  "name": "commenter",
+  "name": "gh-action-utils-script-core",
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
-  "main": "../../dist/commenter/src/main.js",
+  "main": "../../dist/gh-action-utils-script-core/src/index.js",
   "keywords": [
     "utils",
     "github actions",
@@ -17,7 +17,6 @@
     "build": "tsc && ncc build"
   },
   "dependencies": {
-    "gh-action-utils-script-core": "*",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   }

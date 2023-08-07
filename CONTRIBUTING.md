@@ -18,12 +18,7 @@ $ yarn add -D jest -W
 
 ### Add new packages
 
-```sh
-# Add new packages
-$ pwd
-
-$ yarn workspace create packages/hoge
-```
+`packages/`配下に新たにディレクトリを掘ってS
 
 ### Install package-only modules
 

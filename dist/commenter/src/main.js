@@ -25,6 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 const core = __importStar(require("@actions/core"));
+// import { GitHubContext } from '@/types'
+const gh_action_utils_script_core_1 = require("gh-action-utils-script-core");
+// import { inspect } from 'util';
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
@@ -38,11 +41,12 @@ const main = async ({ github, context }) => {
             throw new Error('Pull request number not found.');
         }
         console.log(`start.${prNumber}`);
+        // const pr = await github.rest.pulls.get({
+        //   ...context.repo,
+        //   pull_number: prNumber,
+        // });
         // プルリクエストの情報を取得してマージメッセージを取得
-        const pr = await github.rest.pulls.get({
-            ...context.repo,
-            pull_number: prNumber,
-        });
+        const pr = await (0, gh_action_utils_script_core_1.fetchPullRequests)({ github, context, prNumber });
         console.log(`start.${JSON.stringify(pr)}`);
         const mergeMessage = pr.data.title;
         console.log(`start.${mergeMessage}`);
@@ -50,7 +54,7 @@ const main = async ({ github, context }) => {
         await github.rest.pulls.update({
             ...context.repo,
             pull_number: prNumber,
-            body: `${mergeMessage} test sample`,
+            body: `${mergeMessage} test`,
         });
         console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
     }
