@@ -1,8 +1,8 @@
 {
-  "name": "commenter",
+  "name": "gha-commenter",
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
-  "main": "../../dist/commenter/src/main.js",
+  "main": "../../dist/gha-commenter/src/main.js",
   "keywords": [
     "utils",
     "github actions",
@@ -14,10 +14,10 @@
   "license": "MIT",
   "scripts": {
     "t:check": "tsc --noEmit",
-    "build": "tsc && ncc build"
+    "build": "tsc -p tsconfig.json && ncc build"
   },
   "dependencies": {
-    "gh-action-utils-script-core": "*",
+    "gha-core": "*",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   }

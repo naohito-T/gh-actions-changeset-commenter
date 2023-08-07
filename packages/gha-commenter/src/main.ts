@@ -1,13 +1,13 @@
 import * as core from '@actions/core';
-// import { GitHubContext } from '@/types'
-import { fetchPullRequests, updatePullRequestMessage } from 'gh-action-utils-script-core'
+import { fetchPullRequests, updatePullRequestMessage } from 'gha-core'
+import { GitHubContext } from 'gha-core/src/types'
 // import { inspect } from 'util';
 
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-export const main = async ({ github, context }: any): Promise<void> => {
+export const main = async ({ github, context }: GitHubContext): Promise<void> => {
   try {
     // プルリクエストの情報を取得
     console.log(`start.`);
@@ -26,12 +26,6 @@ export const main = async ({ github, context }: any): Promise<void> => {
 
     console.log(`start.${mergeMessage}`);
 
-    // await github.rest.pulls.update({
-      //   ...context.repo,
-      //   pull_number: prNumber,
-      //   body: `${mergeMessage} test`,
-      // });
-      
     // プルリクエストにマージメッセージを反映させる
     await updatePullRequestMessage({ github, context, prNumber, body: `${mergeMessage} test tataatw`, } )
 
@@ -40,3 +34,5 @@ export const main = async ({ github, context }: any): Promise<void> => {
     if (e instanceof Error) core.setFailed(e.message);
   }
 };
+
+

@@ -1,4 +1,4 @@
-import { GitHubContext, TargetPullRequestNumber, UpdatePullRequestMessage } from './type'
+import { GitHubContext, TargetPullRequestNumber, UpdatePullRequestMessage } from './types'
 
 export const fetchPullRequests = async ({ github, context, prNumber }: GitHubContext & TargetPullRequestNumber ) => {
   return await github.rest.pulls.get({

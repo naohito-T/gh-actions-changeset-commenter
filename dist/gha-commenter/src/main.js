@@ -25,8 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 const core = __importStar(require("@actions/core"));
-// import { GitHubContext } from '@/types'
-const gh_action_utils_script_core_1 = require("gh-action-utils-script-core");
+const gha_core_1 = require("gha-core");
 // import { inspect } from 'util';
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
@@ -42,17 +41,12 @@ const main = async ({ github, context }) => {
         }
         console.log(`start.${prNumber}`);
         // プルリクエストの情報を取得してマージメッセージを取得
-        const pr = await (0, gh_action_utils_script_core_1.fetchPullRequests)({ github, context, prNumber });
+        const pr = await (0, gha_core_1.fetchPullRequests)({ github, context, prNumber });
         console.log(`start. pull ${JSON.stringify(pr)}`);
         const mergeMessage = pr.data.title;
         console.log(`start.${mergeMessage}`);
-        // await github.rest.pulls.update({
-        //   ...context.repo,
-        //   pull_number: prNumber,
-        //   body: `${mergeMessage} test`,
-        // });
         // プルリクエストにマージメッセージを反映させる
-        await (0, gh_action_utils_script_core_1.updatePullRequestMessage)({ github, context, prNumber, body: `${mergeMessage} test tataatw`, });
+        await (0, gha_core_1.updatePullRequestMessage)({ github, context, prNumber, body: `${mergeMessage} test tataatw`, });
         console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
     }
     catch (e) {

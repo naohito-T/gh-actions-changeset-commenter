@@ -14,9 +14,9 @@
   "author": "naohito-T",
   "license": "MIT",
   "workspaces": [
-    "packages/commenter",
-    "packages/templates",
-    "packages/gh-action-utils-script-core"
+    "packages/gha-commenter",
+    "packages/gha-core",
+    "packages/templates"
   ],
   "scripts": {
     "c:t:check": "tsc --noEmit -p ./packages/commenter/tsconfig.json",
