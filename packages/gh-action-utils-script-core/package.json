@@ -1,7 +1,7 @@
 {
   "name": "gh-action-utils-script-core",
   "version": "1.0.0",
-  "description": "It is assumed to be used in actions/GitHub-script.",
+  "description": "gh-action-utils-script core library",
   "main": "../../dist/gh-action-utils-script-core/src/index.js",
   "keywords": [
     "utils",

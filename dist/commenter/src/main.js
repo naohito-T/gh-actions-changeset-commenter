@@ -41,21 +41,18 @@ const main = async ({ github, context }) => {
             throw new Error('Pull request number not found.');
         }
         console.log(`start.${prNumber}`);
-        // const pr = await github.rest.pulls.get({
-        //   ...context.repo,
-        //   pull_number: prNumber,
-        // });
         // プルリクエストの情報を取得してマージメッセージを取得
         const pr = await (0, gh_action_utils_script_core_1.fetchPullRequests)({ github, context, prNumber });
-        console.log(`start.${JSON.stringify(pr)}`);
+        console.log(`start. pull ${JSON.stringify(pr)}`);
         const mergeMessage = pr.data.title;
         console.log(`start.${mergeMessage}`);
+        // await github.rest.pulls.update({
+        //   ...context.repo,
+        //   pull_number: prNumber,
+        //   body: `${mergeMessage} test`,
+        // });
         // プルリクエストにマージメッセージを反映させる
-        await github.rest.pulls.update({
-            ...context.repo,
-            pull_number: prNumber,
-            body: `${mergeMessage} test`,
-        });
+        await (0, gh_action_utils_script_core_1.updatePullRequestMessage)({ github, context, prNumber, body: `${mergeMessage} test tataatw`, });
         console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
     }
     catch (e) {

@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 // import { GitHubContext } from '@/types'
-import { fetchPullRequests } from 'gh-action-utils-script-core'
+import { fetchPullRequests, updatePullRequestMessage } from 'gh-action-utils-script-core'
 // import { inspect } from 'util';
 
 /**
@@ -18,25 +18,22 @@ export const main = async ({ github, context }: any): Promise<void> => {
 
     console.log(`start.${prNumber}`);
 
-    // const pr = await github.rest.pulls.get({
-      //   ...context.repo,
-      //   pull_number: prNumber,
-      // });
-      
     // プルリクエストの情報を取得してマージメッセージを取得
     const pr = await fetchPullRequests({ github, context, prNumber })
 
-    console.log(`start.${JSON.stringify(pr)}`);
+    console.log(`start. pull ${JSON.stringify(pr)}`);
     const mergeMessage = pr.data.title;
 
     console.log(`start.${mergeMessage}`);
 
+    // await github.rest.pulls.update({
+      //   ...context.repo,
+      //   pull_number: prNumber,
+      //   body: `${mergeMessage} test`,
+      // });
+      
     // プルリクエストにマージメッセージを反映させる
-    await github.rest.pulls.update({
-      ...context.repo,
-      pull_number: prNumber,
-      body: `${mergeMessage} test`,
-    });
+    await updatePullRequestMessage({ github, context, prNumber, body: `${mergeMessage} test tataatw`, } )
 
     console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
   } catch (e: unknown) {
