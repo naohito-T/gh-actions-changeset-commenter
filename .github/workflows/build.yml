@@ -32,5 +32,5 @@ jobs:
         name: test actions
         with:
           script: |
-            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/commenter/src/main.js`)
-            console.log(await script.main({github, context}))
+            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
+            console.log(await script.main({ github, context }))

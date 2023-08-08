@@ -1,0 +1,25 @@
+{
+  "name": "gha-core",
+  "version": "1.0.0",
+  "description": "gh-action-utils-script core library",
+  "main": "../../dist/gha-core/src/index.js",
+  "keywords": [
+    "utils",
+    "github actions",
+    "submodules",
+    "TypeScript",
+    "JavaScript"
+  ],
+  "author": "Naohito-T",
+  "license": "MIT",
+  "scripts": {
+    "t:check": "tsc --noEmit",
+    "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
+    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
+    "build": "tsc -p tsconfig.json && ncc build"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
+  }
+}

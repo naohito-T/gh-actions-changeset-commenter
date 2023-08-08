@@ -1,0 +1,4 @@
+# gha-core
+
+tscは自身のpackageに属するpath aliasしか解決できない
+そのためこのプロジェクトは各packageから利用されるため相対パスで記載すること。

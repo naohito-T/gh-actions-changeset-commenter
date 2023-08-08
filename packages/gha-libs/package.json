@@ -1,0 +1,19 @@
+{
+  "name": "gha-libs",
+  "version": "1.0.0",
+  "description": "It is assumed to be used in actions/GitHub-script.",
+  "main": "../../dist/gha-libs/src/index.js",
+  "keywords": [
+    "utils",
+    "github actions",
+    "submodules",
+    "TypeScript",
+    "JavaScript"
+  ],
+  "author": "Naohito-T",
+  "license": "UNLICENSED",
+  "scripts": {
+    "t:check": "tsc --noEmit",
+    "build": "tsc -p tsconfig.json && ncc build"
+  }
+}

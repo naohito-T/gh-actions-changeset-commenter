@@ -1,0 +1,35 @@
+name: Auto Pull Request prod
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+permissions: write-all
+
+jobs:
+  auto-pull-request-prod:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create pull request but not if release
+        run: |
+          if ! gh pr list -B release | grep OPEN; then
+            gh pr create \
+              --head develop \
+              --base main \
+              --title "Deploy to production 🎉" \
+              --body "Deploy to production 🎉"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/github-script@v6
+        name: test actions
+        with:
+          script: |
+            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/commenter/src/main.js`)
+            console.log(await script.main({github, context}))

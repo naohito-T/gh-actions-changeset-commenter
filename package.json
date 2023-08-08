@@ -14,12 +14,31 @@
   "author": "naohito-T",
   "license": "MIT",
   "workspaces": [
-    "packages/commenter",
-    "packages/templates"
+    "packages/gha-commenter",
+    "packages/gha-core",
+    "packages/gha-libs"
   ],
   "scripts": {
+    "c:t:check": "tsc --noEmit -p ./packages/commenter/tsconfig.json",
+    "t:t:check": "tsc --noEmit -p ./packages/templates/tsconfig.json",
+    "c:l:check": "eslint --max-warnings 0 ./packages/commenter",
+    "t:l:check": "eslint  --max-warnings 0 ./packages/templates",
+    "commenter:build": "yarn workspace gha-commenter build",
+    "core:build": "yarn workspace gha-core build",
+
+    "all:t:check": "yarn workspaces run t:check",
+
+    "all:p:write": "yarn workspaces run p:write",
     "all:build": "yarn workspaces run build",
-    "c:build": "yarn workspace commenter build",
-    "t:build": "yarn workspace templates build"
+    "all:lint": "run-p "
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "@vercel/ncc": "^0.36.1",
+    "eslint": "^8.46.0",
+    "jest": "^29.6.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.1",
+    "typescript": "^5.1.6"
   }
 }
