@@ -25,7 +25,8 @@
     "t:l:check": "eslint  --max-warnings 0 ./packages/templates",
     "commenter:build": "yarn workspace gha-commenter build",
     "core:build": "yarn workspace gha-core build",
-    "all:t:check": "run-p c:t:check t:t:check",
+
+    "all:t:check": "yarn workspaces run t:check",
 
     "all:p:write": "yarn workspaces run p:write",
     "all:build": "yarn workspaces run build",
