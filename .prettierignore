@@ -1,5 +1,6 @@
+.gitignore
+.github
 dist
 node_modules
-.gitignore
 LICENSE
 !*.md

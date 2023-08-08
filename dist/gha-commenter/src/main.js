@@ -40,14 +40,19 @@ const main = async ({ github, context }) => {
             throw new Error('Pull request number not found.');
         }
         console.log(`start.${prNumber}`);
-        // プルリクエストの情報を取得してマージメッセージを取得
-        const pr = await (0, gha_core_1.fetchPullRequests)({ github, context, prNumber });
-        console.log(`start. pull ${JSON.stringify(pr)}`);
-        const mergeMessage = pr.data.title;
-        console.log(`start.${mergeMessage}`);
+        const prList = await (0, gha_core_1.fetchPullRequestList)({ github, context, prNumber });
+        console.log(`start. pull request ${JSON.stringify(prList)}`);
+        const mergeCommitTitle = prList.data.filter((p) => p.merge_commit_sha !== null).map((p) => p.title);
+        console.log(`start.${mergeCommitTitle}`);
+        const mergeTitleString = mergeCommitTitle.join('\n');
         // プルリクエストにマージメッセージを反映させる
-        await (0, gha_core_1.updatePullRequestMessage)({ github, context, prNumber, body: `${mergeMessage} test tataatw`, });
-        console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
+        await (0, gha_core_1.updatePullRequestMessage)({
+            github,
+            context,
+            prNumber,
+            body: `${mergeTitleString} test tanaka`,
+        });
+        console.log(`Merge message "${mergeTitleString}" has been applied to the pull request.`);
     }
     catch (e) {
         if (e instanceof Error)

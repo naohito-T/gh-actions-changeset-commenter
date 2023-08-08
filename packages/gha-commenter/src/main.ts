@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import { fetchPullRequests, updatePullRequestMessage } from 'gha-core'
-import { GitHubContext } from 'gha-core/src/types'
+import { fetchPullRequest, fetchPullRequestList, updatePullRequestMessage } from 'gha-core';
+import { GitHubContext } from 'gha-core/src/types';
 // import { inspect } from 'util';
 
 /**
@@ -18,21 +18,26 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
 
     console.log(`start.${prNumber}`);
 
-    // プルリクエストの情報を取得してマージメッセージを取得
-    const pr = await fetchPullRequests({ github, context, prNumber })
+    const prList = await fetchPullRequestList({ github, context, prNumber });
 
-    console.log(`start. pull ${JSON.stringify(pr)}`);
-    const mergeMessage = pr.data.title;
+    console.log(`start. pull request ${JSON.stringify(prList)}`);
 
-    console.log(`start.${mergeMessage}`);
+    const mergeCommitTitle = prList.data.filter((p) => p.merge_commit_sha !== null).map((p) => p.title)
+
+    console.log(`start.${mergeCommitTitle}`);
+
+    const mergeTitleString = mergeCommitTitle.join('\n');
 
     // プルリクエストにマージメッセージを反映させる
-    await updatePullRequestMessage({ github, context, prNumber, body: `${mergeMessage} test tataatw`, } )
+    await updatePullRequestMessage({
+      github,
+      context,
+      prNumber,
+      body: `${mergeTitleString} test tanaka`,
+    });
 
-    console.log(`Merge message "${mergeMessage}" has been applied to the pull request.`);
+    console.log(`Merge message "${mergeTitleString}" has been applied to the pull request.`);
   } catch (e: unknown) {
     if (e instanceof Error) core.setFailed(e.message);
   }
 };
-
-

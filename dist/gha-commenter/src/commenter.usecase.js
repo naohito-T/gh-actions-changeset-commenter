@@ -1,6 +1,6 @@
+"use strict";
 /**
  * @desc usecaseは各packagesが所持していい
  * @note repositoryに関してはpackageを参照する
  */
-
-export {}
+Object.defineProperty(exports, "__esModule", { value: true });
