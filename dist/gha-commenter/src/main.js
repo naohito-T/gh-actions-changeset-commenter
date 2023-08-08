@@ -26,12 +26,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 const core = __importStar(require("@actions/core"));
 const gha_core_1 = require("gha-core");
-// import { inspect } from 'util';
+const commenter_usecase_1 = require("./commenter.usecase");
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-const main = async ({ github, context }) => {
+const main = async ({ github, context, targetBranch, }) => {
     try {
         // プルリクエストの情報を取得
         console.log(`start.`);
@@ -40,9 +40,11 @@ const main = async ({ github, context }) => {
             throw new Error('Pull request number not found.');
         }
         console.log(`start.${prNumber}`);
-        const prList = await (0, gha_core_1.fetchPullRequestList)({ github, context, prNumber });
+        // const openPrsTargetingMain = await fetchPullRequestList({ github, context, base: 'main' });
+        const prList = await (0, commenter_usecase_1.fetchPendingBasePRs)({ github, context, base: targetBranch });
         console.log(`start. pull request ${JSON.stringify(prList)}`);
-        const mergeCommitTitle = prList.data.filter((p) => p.merge_commit_sha !== null).map((p) => p.title);
+        // const unmergedPrTitles = prList.data.filter(p => !p.merged_at).map(p => p.title);
+        const mergeCommitTitle = prList.data.map((p) => p.title);
         console.log(`start.${mergeCommitTitle}`);
         const mergeTitleString = mergeCommitTitle.join('\n');
         // プルリクエストにマージメッセージを反映させる

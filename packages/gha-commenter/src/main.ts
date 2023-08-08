@@ -1,13 +1,18 @@
 import * as core from '@actions/core';
-import { fetchPullRequest, fetchPullRequestList, updatePullRequestMessage } from 'gha-core';
+import { fetchPullRequestList, updatePullRequestMessage } from 'gha-core';
 import { GitHubContext } from 'gha-core/src/types';
-// import { inspect } from 'util';
+import { fetchPendingBasePRs } from './commenter.usecase';
+import { TargetBaseBranch } from './types';
 
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-export const main = async ({ github, context }: GitHubContext): Promise<void> => {
+export const main = async ({
+  github,
+  context,
+  targetBranch,
+}: GitHubContext & { targetBranch: TargetBaseBranch }): Promise<void> => {
   try {
     // プルリクエストの情報を取得
     console.log(`start.`);
@@ -18,11 +23,12 @@ export const main = async ({ github, context }: GitHubContext): Promise<void> =>
 
     console.log(`start.${prNumber}`);
 
-    const prList = await fetchPullRequestList({ github, context, prNumber });
-
+    // const openPrsTargetingMain = await fetchPullRequestList({ github, context, base: 'main' });
+    const prList = await fetchPendingBasePRs({ github, context, base: targetBranch });
     console.log(`start. pull request ${JSON.stringify(prList)}`);
+    // const unmergedPrTitles = prList.data.filter(p => !p.merged_at).map(p => p.title);
 
-    const mergeCommitTitle = prList.data.filter((p) => p.merge_commit_sha !== null).map((p) => p.title)
+    const mergeCommitTitle = prList.data.map((p) => p.title);
 
     console.log(`start.${mergeCommitTitle}`);
 

@@ -25,14 +25,13 @@
     "t:l:check": "eslint  --max-warnings 0 ./packages/templates",
     "commenter:build": "yarn workspace gha-commenter build",
     "core:build": "yarn workspace gha-core build",
-
     "all:t:check": "yarn workspaces run t:check",
-
     "all:p:write": "yarn workspaces run p:write",
     "all:build": "yarn workspaces run build",
     "all:lint": "run-p "
   },
   "devDependencies": {
+    "@octokit/types": "^11.1.0",
     "@types/node": "^20.4.8",
     "@vercel/ncc": "^0.36.1",
     "eslint": "^8.46.0",

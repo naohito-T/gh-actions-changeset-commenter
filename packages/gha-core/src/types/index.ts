@@ -7,6 +7,6 @@ export type GitHubContext = {
   context: typeof context;
 };
 
-export type TargetPullRequestNumber =  { prNumber: number}
+export type TargetPullRequestNumber = { prNumber: number };
 
-export type UpdatePullRequestMessage = TargetPullRequestNumber & { body: string }
+export type UpdatePullRequestMessage = TargetPullRequestNumber & { body: string };
