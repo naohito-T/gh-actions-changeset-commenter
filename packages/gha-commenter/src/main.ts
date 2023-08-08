@@ -11,11 +11,12 @@ import { TargetBaseBranch } from './types';
 export const main = async ({
   github,
   context,
-  targetBranch,
+  targetBranch = 'develop',
 }: GitHubContext & { targetBranch: TargetBaseBranch }): Promise<void> => {
   try {
     // プルリクエストの情報を取得
     console.log(`start.`);
+    console.log(`start. target branch ${targetBranch}`);
     const prNumber = context.payload.pull_request?.number;
     if (!prNumber) {
       throw new Error('Pull request number not found.');

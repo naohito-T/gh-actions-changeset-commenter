@@ -31,10 +31,11 @@ const commenter_usecase_1 = require("./commenter.usecase");
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-const main = async ({ github, context, targetBranch, }) => {
+const main = async ({ github, context, targetBranch = 'develop', }) => {
     try {
         // プルリクエストの情報を取得
         console.log(`start.`);
+        console.log(`start. target branch ${targetBranch}`);
         const prNumber = context.payload.pull_request?.number;
         if (!prNumber) {
             throw new Error('Pull request number not found.');
