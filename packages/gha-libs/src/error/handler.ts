@@ -1,4 +1,4 @@
-export {}
+export {};
 
 /**
  * @desc 当アプリケーションのerror handler

@@ -28,8 +28,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/github-script@v6
-        name: test actions
+        name: update PRs title to body
         with:
           script: |
-            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/commenter/src/main.js`)
-            console.log(await script.main({github, context}))
+            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
+            console.log(await script.main({ github, context, base: 'main', from: 'develop' }))

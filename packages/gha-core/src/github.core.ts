@@ -1,14 +1,21 @@
-import { GitHubContext, TargetPullRequestNumber, UpdatePullRequestMessage } from './types';
+import {
+  GitHubContext,
+  TargetPullRequestNumber,
+  UpdatePullRequestMessage,
+  CustomArgs,
+} from './types';
 
 /** @desc プルリクエストを取得する */
 export const fetchPullRequest = async ({
   github,
   context,
   prNumber,
-}: GitHubContext & TargetPullRequestNumber) => {
+  ...args // この部分が任意のオブジェクトを受け取るための変更
+}: GitHubContext & TargetPullRequestNumber & CustomArgs) => {
   return await github.rest.pulls.get({
     ...context.repo,
     pull_number: prNumber,
+    ...args,
   });
 };
 
@@ -17,20 +24,14 @@ export const fetchPullRequestList = async ({
   github,
   context,
   base,
-}: GitHubContext & { base?: string }) => {
+  ...args // この部分が任意のオブジェクトを受け取るための変更
+}: GitHubContext & { base?: string } & CustomArgs) => {
   return await github.rest.pulls.list({
     ...context.repo, // owner && repo
     base, // PR target base branch
+    ...args,
   });
 };
-
-/** @desc merge一覧を取得する */
-// export const fetchMergeBranchList = async ({ github, context, prNumber }: GitHubContext & TargetPullRequestNumber ) => {
-//   return await github.rest.pulls.merge({
-//     ...context.repo,
-//     pull_number: prNumber,
-//   });
-// }
 
 /** @desc プルリクエストにマージメッセージを反映させる */
 export const updatePullRequestMessage = async ({

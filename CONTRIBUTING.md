@@ -28,3 +28,6 @@ $ yarn add -D jest -W
 # Add new module in packages
 $ yarn workspace packages/hoge add node-fetch
 ```
+
+## Reference
+[GitHub REST API](https://docs.github.com/ja/rest/repos/repos?apiVersion=2022-11-28#get-a-repository)
