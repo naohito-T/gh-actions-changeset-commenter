@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create pull request but not if release
+      - name: Create pull request but not if develop
         run: |
-          if ! gh pr list -B release | grep OPEN; then
+          if ! gh pr list -B develop | grep OPEN; then
             gh pr create \
               --head develop \
               --base main \
