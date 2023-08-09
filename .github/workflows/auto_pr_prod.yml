@@ -10,10 +10,20 @@ permissions: write-all
 
 jobs:
   auto-pull-request-prod:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [16.19.1]
+        os: [ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Composite Setup node
+        uses: ./.github/actions/setup/node
+        with:
+          node-version: ${{ matrix.node-version }}
 
       # - name: Create pull request but not if develop
       #   run: |
