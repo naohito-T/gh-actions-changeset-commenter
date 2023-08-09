@@ -32,4 +32,4 @@ jobs:
         with:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
-            console.log(await script.main({ github, context, targetBranch: 'main' }))
+            console.log(await script.main({ github, context, base: 'main', from: 'develop' }))
