@@ -1,4 +1,4 @@
-name: Check build
+name: Check build（PUSH）
 
 on:
   workflow_dispatch:
