@@ -6,3 +6,8 @@ export interface BaseBranch {
 }
 
 export type CustomGitHubContext = BaseBranch & FromBranch;
+
+export interface UpdateBodyMessage {
+  title: string;
+  htmlLink: string;
+}

@@ -6,8 +6,12 @@ import { CustomGitHubContext } from '../types';
 /**
  * @desc pull_request eventの際に使用するusecase
  */
-export const pullRequestUsecase = async ({ github, context,base = 'develop', // merge先
-from = 'develop' }: GitHubContext &CustomGitHubContext) => {
+export const pullRequestUsecase = async ({
+  github,
+  context,
+  base = 'develop', // merge先
+  from = 'develop',
+}: GitHubContext & CustomGitHubContext) => {
   // 基底ブランチとプルリクエストで分ける必要があるかもしれない
   // 現在のプルリクを取得（developとする）怪しいかも
   const prNumber = context.payload.pull_request?.number;
@@ -36,6 +40,6 @@ from = 'develop' }: GitHubContext &CustomGitHubContext) => {
     github,
     context,
     prNumber,
-    body: `${fromBodyMessage}\n${mergedPRsTitleList.join('\n')}`,
+    body: `- ${mergedPRsTitleList.map((d) => d.htmlLink).join('\n')}`,
   });
 };

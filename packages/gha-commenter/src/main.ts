@@ -15,13 +15,13 @@ export const main = async ({
   from = 'develop',
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
-    console.log(`start context: ${JSON.stringify(context)}`)
+    console.log(`start context: ${JSON.stringify(context)}`);
     const event = context.eventName;
     switch (event) {
       case 'push':
         return;
       case 'pull_request':
-        await pullRequestUsecase({github, context, base, from})
+        await pullRequestUsecase({ github, context, base, from });
         break;
       default:
         throw new Error('This event is not supported.');
@@ -30,8 +30,8 @@ export const main = async ({
     const { message } = errorHandler(e);
     message
       ? core.setFailed(message)
-      // 差分がないとき
-      : core.error('No PRs merged into ${} but not into ${}.');
-      // : core.error(`No PRs merged into ${} but not into ${}.`);
+      : // 差分がないとき
+        core.error('No PRs merged into ${} but not into ${}.');
+    // : core.error(`No PRs merged into ${} but not into ${}.`);
   }
 };

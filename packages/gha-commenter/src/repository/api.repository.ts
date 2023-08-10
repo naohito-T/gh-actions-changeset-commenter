@@ -1,6 +1,6 @@
 import { fetchPullRequest, fetchPullRequestList } from 'gha-core';
 import { GitHubContext, TargetPullRequestNumber } from 'gha-core/src/types';
-import { FromBranch, BaseBranch } from '../types';
+import { FromBranch, BaseBranch, UpdateBodyMessage } from '../types';
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
 export const fetchPRBodyMessage = async ({
@@ -67,7 +67,7 @@ export const fetchPRsMergedInFromNotBase = async ({
   context,
   base,
   from,
-}: GitHubContext & BaseBranch & FromBranch) => {
+}: GitHubContext & BaseBranch & FromBranch): Promise<UpdateBodyMessage[]> => {
   // Step 1: developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
   // これを自身にmergeされたプルリクエストメソッド
   const fromMergedPRs = await fetchPullRequestList({
@@ -93,5 +93,5 @@ export const fetchPRsMergedInFromNotBase = async ({
         developPR.merged_at &&
         !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
     )
-    .map((pr) => pr.title);
+    .map((pr) => ({ title: pr.title, htmlLink: pr._links.html.href }));
 };

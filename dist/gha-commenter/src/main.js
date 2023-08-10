@@ -34,6 +34,7 @@ const usecases_1 = require("./usecases");
 const main = async ({ github, context, base = 'develop', // merge先
 from = 'develop', }) => {
     try {
+        console.log(`start context: ${JSON.stringify(context)}`);
         const event = context.eventName;
         switch (event) {
             case 'push':
@@ -49,8 +50,8 @@ from = 'develop', }) => {
         const { message } = (0, gha_core_1.errorHandler)(e);
         message
             ? core.setFailed(message)
-            // 差分がないとき
-            : core.error('No PRs merged into ${} but not into ${}.');
+            : // 差分がないとき
+                core.error('No PRs merged into ${} but not into ${}.');
         // : core.error(`No PRs merged into ${} but not into ${}.`);
     }
 };

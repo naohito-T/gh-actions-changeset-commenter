@@ -65,6 +65,6 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
     return fromMergedPRs.data
         .filter((developPR) => developPR.merged_at &&
         !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title))
-        .map((pr) => pr.title);
+        .map((pr) => ({ title: pr.title, htmlLink: pr._links.html.href }));
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;

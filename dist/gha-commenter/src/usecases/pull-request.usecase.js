@@ -7,7 +7,7 @@ const repository_1 = require("../repository");
  * @desc pull_request eventの際に使用するusecase
  */
 const pullRequestUsecase = async ({ github, context, base = 'develop', // merge先
-from = 'develop' }) => {
+from = 'develop', }) => {
     // 基底ブランチとプルリクエストで分ける必要があるかもしれない
     // 現在のプルリクを取得（developとする）怪しいかも
     const prNumber = context.payload.pull_request?.number;
@@ -33,7 +33,7 @@ from = 'develop' }) => {
         github,
         context,
         prNumber,
-        body: `${fromBodyMessage}\n${mergedPRsTitleList.join('\n')}`,
+        body: `- ${mergedPRsTitleList.map((d) => d.htmlLink).join('\n')}`,
     });
 };
 exports.pullRequestUsecase = pullRequestUsecase;
