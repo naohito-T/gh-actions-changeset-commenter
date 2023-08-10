@@ -38,7 +38,7 @@ from = 'develop', }) => {
         let body;
         switch (context.eventName) {
             case 'push':
-                return;
+                await (0, usecases_1.pushUsecase)({ github, context, base });
             case 'pull_request':
                 await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
                 break;

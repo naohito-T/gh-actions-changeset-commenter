@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { GitHubContext, errorHandler } from 'gha-core/src';
-import { pullRequestUsecase } from './usecases';
+import { pullRequestUsecase, pushUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
 
 /**
@@ -18,7 +18,7 @@ export const main = async ({
     let body: string;
     switch (context.eventName) {
       case 'push':
-        return;
+        await pushUsecase({ github, context, base });
       case 'pull_request':
         await pullRequestUsecase({ github, context, base, from });
         break;
