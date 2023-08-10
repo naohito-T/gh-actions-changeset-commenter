@@ -15,8 +15,11 @@ export const main = async ({
   from = 'develop',
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
+    // 基底ブランチとプルリクエストで分ける必要があるかもしれない
     // 現在のプルリクを取得（developとする）怪しいかも
     const prNumber = context.payload.pull_request?.number;
+    const branch = context.ref;
+    console.log(`${JSON.stringify(context)}`);
     if (!prNumber) throw new Error('Pull request number not found.');
 
     console.log(`start. target branch ${base} target pull request${prNumber}`);
