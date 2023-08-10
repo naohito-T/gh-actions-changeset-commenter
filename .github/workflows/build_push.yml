@@ -9,7 +9,7 @@ on:
 permissions: write-all
 
 jobs:
-  check-build:
+  check-build-push:
     strategy:
       matrix:
         node-version: [16.19.1]
