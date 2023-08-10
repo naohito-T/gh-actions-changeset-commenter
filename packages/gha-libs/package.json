@@ -1,0 +1,21 @@
+{
+  "name": "gha-libs",
+  "version": "1.0.0",
+  "description": "It is assumed to be used in actions/GitHub-script.",
+  "main": "../../dist/gha-libs/index.js",
+  "keywords": [
+    "utils",
+    "github actions",
+    "submodules",
+    "TypeScript",
+    "JavaScript"
+  ],
+  "author": "Naohito-T",
+  "license": "UNLICENSED",
+  "scripts": {
+    "t:check": "tsc --noEmit",
+    "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
+    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
+    "build": "tsc -p tsconfig.json && ncc build"
+  }
+}

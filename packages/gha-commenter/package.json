@@ -1,0 +1,29 @@
+{
+  "name": "gha-commenter",
+  "version": "1.0.0",
+  "description": "It is assumed to be used in actions/GitHub-script.",
+  "main": "../../dist/gha-commenter/src/main.js",
+  "keywords": [
+    "utils",
+    "github actions",
+    "submodules",
+    "TypeScript",
+    "JavaScript"
+  ],
+  "author": "Naohito-T",
+  "license": "MIT",
+  "scripts": {
+    "t:check": "tsc --noEmit",
+    "l:check": "eslint --ext .js,.ts",
+    "l:write": "eslint --fix --ext .js,.ts",
+    "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
+    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
+    "build": "tsc -p tsconfig.json && ncc build"
+  },
+  "dependencies": {
+    "gha-core": "*",
+    "gha-libs": "*",
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1"
+  }
+}

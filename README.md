@@ -8,10 +8,11 @@ actions/GitHub-scriptから使用するスクリプト群
 
 ## Getting start.
 
-build file in copy
+```sh
+# In root directory
+$ yarn install
+```
 
-or
+## Developer
 
-github submodules
-
-
+[CONTRIBUTING](./CONTRIBUTING.md)

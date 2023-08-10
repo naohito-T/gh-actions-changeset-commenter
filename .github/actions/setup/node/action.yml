@@ -1,0 +1,43 @@
+name: "Install Setup Node"
+description: "This action sets up Node and installs deps using yarn."
+author: "Naohito-T"
+
+inputs:
+  cache-version:
+    required: false
+    description: "used for refreshing the cache by simply changing value to something new"
+    default: "1"
+  node-version:
+    description: "Specified node version"
+    required: false
+    default: "18.14.2"
+  work-directory:
+    description: "Destination working Directory"
+    required: false
+    default: "./"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: yarn
+        cache-dependency-path: ${{ inputs.work-directory }}/yarn.lock
+
+    - name: Cache dependencies.
+      id: cache-node
+      uses: actions/cache@v3
+      with:
+        path: "${{ inputs.work-directory }}/node_modules"
+        key: ${{ runner.os }}-modules-${{ inputs.cache-version }}-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Cache hit check.
+      run: echo "cache-node-->${{steps.cache-node.outputs.cache-hit}}<--"
+      shell: bash
+
+    - name: Install dependencies.
+      if: steps.cache-node.outputs.cache-hit != 'true'
+      run: cd ${{ inputs.work-directory }} && yarn install --frozen-lockfile
+      shell: bash
