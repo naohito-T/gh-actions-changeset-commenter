@@ -1,13 +1,10 @@
-import { GitHubContext,updateBranchBodyMessage } from 'gha-core';
+import * as core from '@actions/core';
+import { GitHubContext, updateBranchBodyMessage } from 'gha-core';
 import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseBranch } from '../types';
 
 /** @desc push eventの際に使用するusecase */
-export const pushUsecase = async ({
-  github,
-  context,
-  base = 'main', // merge先
-}: GitHubContext & BaseBranch) => {
+export const pushUsecase = async ({ github, context, base }: GitHubContext & BaseBranch) => {
   const branchName = context.ref.replace('refs/heads/', '');
 
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
@@ -17,10 +14,8 @@ export const pushUsecase = async ({
     from: branchName,
   });
 
-  console.log(`start. pull request base ${JSON.stringify(mergedPRsHtmlLinks)}`);
-
   if (mergedPRsHtmlLinks.length === 0) {
-    console.log('No PRs merged into develop but not into main.');
+    core.warning('No PRs merged into develop but not into main.');
     return;
   }
 

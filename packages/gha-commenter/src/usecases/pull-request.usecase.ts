@@ -1,16 +1,17 @@
-import { GitHubContext, updatePullRequestMessage } from 'gha-core';
+import * as core from '@actions/core';
+import { GitHubContext, IncorrectError, updatePullRequestMessage } from 'gha-core';
 import { fetchPRBodyMessage, fetchPRsMergedInFromNotBase } from '../repository';
-import { CustomGitHubContext } from '../types';
+import { BaseWithFromBranch } from '../types';
 
 /** @desc pull_request eventの際に使用するusecase */
 export const pullRequestUsecase = async ({
   github,
   context,
-  base = 'develop', // merge先
-  from = 'develop',
-}: GitHubContext & CustomGitHubContext) => {
+  base, // merge先
+  from,
+}: GitHubContext & BaseWithFromBranch) => {
   const prNumber = context.payload.pull_request?.number;
-  if (!prNumber) throw new Error('Pull request number not found.');
+  if (!prNumber) throw new IncorrectError('Pull request number not found.');
 
   const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
@@ -20,11 +21,8 @@ export const pullRequestUsecase = async ({
     from,
   });
 
-  console.log(`start. pull request ${JSON.stringify(fromBodyMessage)}`);
-  console.log(`start. pull request base ${JSON.stringify(mergedPRsHtmlLinks)}`);
-
   if (mergedPRsHtmlLinks.length === 0) {
-    console.log('No PRs merged into develop but not into main.');
+    core.warning('No PRs merged into develop but not into main.');
     return;
   }
 

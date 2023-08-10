@@ -31,17 +31,21 @@ const usecases_1 = require("./usecases");
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-const main = async ({ github, context, base = 'develop', // merge先
-from = 'develop', }) => {
+const main = async ({ github, context, base, // merge先
+from, // merge元
+ }) => {
     try {
         console.log(`start context: ${JSON.stringify(context)}`);
         console.log(`start context.eventName: ${context.eventName}`);
-        let body;
         switch (context.eventName) {
             case 'push':
+                if (!base)
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base}`);
                 await (0, usecases_1.pushUsecase)({ github, context, base });
                 break;
             case 'pull_request':
+                if (!base || !from)
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base} or ${from}`);
                 await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
                 break;
             default:

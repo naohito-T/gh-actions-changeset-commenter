@@ -8,7 +8,9 @@ export interface BaseBranch {
   base: string;
 }
 
-export type CustomGitHubContext = BaseBranch & FromBranch;
+export type BaseWithFromBranch = BaseBranch & FromBranch;
+
+export type CustomGitHubContext = BaseBranch & Partial<FromBranch>;
 
 export interface UpdateBodyMessage {
   title: string;
