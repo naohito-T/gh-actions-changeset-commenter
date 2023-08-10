@@ -52,7 +52,6 @@ from = 'develop', }) => {
             ? core.setFailed(message)
             : // 差分がないとき
                 core.error('No PRs merged into ${} but not into ${}.');
-        // : core.error(`No PRs merged into ${} but not into ${}.`);
     }
 };
 exports.main = main;

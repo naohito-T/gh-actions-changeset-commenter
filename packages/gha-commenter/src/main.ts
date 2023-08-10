@@ -1,6 +1,5 @@
 import * as core from '@actions/core';
 import { GitHubContext } from 'gha-core/src/types';
-import { updatePullRequestMessage } from 'gha-core/src/core';
 import { errorHandler } from 'gha-core/src/error';
 import { pullRequestUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
@@ -33,6 +32,5 @@ export const main = async ({
       ? core.setFailed(message)
       : // 差分がないとき
         core.error('No PRs merged into ${} but not into ${}.');
-    // : core.error(`No PRs merged into ${} but not into ${}.`);
   }
 };
