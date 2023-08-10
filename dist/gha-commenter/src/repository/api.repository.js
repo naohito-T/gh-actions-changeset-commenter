@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
+exports.fetchBranchBodyMessage = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
 const gha_core_1 = require("gha-core");
+/** -------------------
+ * Pull Request
+ *  -------------------/
+
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
 const fetchPRBodyMessage = async ({ github, context, prNumber, }) => {
     const pr = await (0, gha_core_1.fetchPullRequest)({
@@ -41,11 +45,9 @@ const fetchMergedSelfPRs = async ({ github, context, prNumber, }) => {
     });
 };
 exports.fetchMergedSelfPRs = fetchMergedSelfPRs;
-/**
- * @desc fromにはmergeされているが、baseにはmergeされていないプルリクエストのタイトルを取得
- */
+/** @desc base ← from: from merged not merge base */
 const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => {
-    // Step 1: developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
+    // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
     // これを自身にmergeされたプルリクエストメソッド
     const fromMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
@@ -65,6 +67,19 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
     return fromMergedPRs.data
         .filter((developPR) => developPR.merged_at &&
         !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title))
-        .map((pr) => pr.title);
+        .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
+/** -------------------
+ * Branch
+ *  -------------------/
+
+/** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
+const fetchBranchBodyMessage = async ({ github, context, branch, }) => {
+    const br = await (0, gha_core_1.fetchBranch)({
+        github,
+        context,
+        branch,
+    });
+};
+exports.fetchBranchBodyMessage = fetchBranchBodyMessage;

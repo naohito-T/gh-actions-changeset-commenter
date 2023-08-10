@@ -26,46 +26,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 const core = __importStar(require("@actions/core"));
 const gha_core_1 = require("gha-core");
-const commenter_usecase_1 = require("./commenter.usecase");
+const usecases_1 = require("./usecases");
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
  * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
  */
-const main = async ({ github, context, base = 'develop', // merge先
-from = 'develop', }) => {
+const main = async ({ github, context, base, // merge先
+from, // merge元
+ }) => {
     try {
-        // 基底ブランチとプルリクエストで分ける必要があるかもしれない
-        // 現在のプルリクを取得（developとする）怪しいかも
-        const prNumber = context.payload.pull_request?.number;
-        const branch = context.ref;
-        console.log(`${JSON.stringify(context)}`);
-        if (!prNumber)
-            throw new Error('Pull request number not found.');
-        console.log(`start. target branch ${base} target pull request${prNumber}`);
-        // 現在のプルリクのbodyを取得する
-        const fromBodyMessage = await (0, commenter_usecase_1.fetchPRBodyMessage)({ github, context, prNumber });
-        const mergedPRsTitleList = await (0, commenter_usecase_1.fetchPRsMergedInFromNotBase)({
-            github,
-            context,
-            base,
-            from,
-        });
-        console.log(`start. pull request ${JSON.stringify(fromBodyMessage)}`);
-        console.log(`start. pull request base ${JSON.stringify(mergedPRsTitleList)}`);
-        if (mergedPRsTitleList.length === 0) {
-            console.log('No PRs merged into develop but not into main.');
-            return;
+        console.log(`start context: ${JSON.stringify(context)}`);
+        console.log(`start context.eventName: ${context.eventName}`);
+        switch (context.eventName) {
+            case 'push':
+                if (!base)
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base}`);
+                await (0, usecases_1.pushUsecase)({ github, context, base });
+                break;
+            case 'pull_request':
+                if (!base || !from)
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base} or ${from}`);
+                await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
+                break;
+            default:
+                throw new Error('This event is not supported.');
         }
-        await (0, gha_core_1.updatePullRequestMessage)({
-            github,
-            context,
-            prNumber,
-            body: `${fromBodyMessage}\n${mergedPRsTitleList.join('\n')}`,
-        });
+        core.setOutput('comment-id', 'actions');
     }
     catch (e) {
-        if (e instanceof Error)
-            core.setFailed(e.message);
+        const { message } = (0, gha_core_1.errorHandler)(e);
+        message
+            ? core.setFailed(message)
+            : // 差分がないとき
+                core.error('No PRs merged into ${} but not into ${}.');
     }
 };
 exports.main = main;
