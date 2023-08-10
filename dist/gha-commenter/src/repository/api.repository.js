@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchBranchBodyMessage = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
-const core_1 = require("gha-core/src/core");
+const gha_core_1 = require("gha-core");
 /** -------------------
  * Pull Request
  *  -------------------/
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
 const fetchPRBodyMessage = async ({ github, context, prNumber, }) => {
-    const pr = await (0, core_1.fetchPullRequest)({
+    const pr = await (0, gha_core_1.fetchPullRequest)({
         github,
         context,
         prNumber,
@@ -17,14 +17,14 @@ const fetchPRBodyMessage = async ({ github, context, prNumber, }) => {
 };
 exports.fetchPRBodyMessage = fetchPRBodyMessage;
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-const fetchPendingPRsBaseTarget = async ({ github, context, base, }) => await (0, core_1.fetchPullRequestList)({ github, context, base, state: 'open' });
+const fetchPendingPRsBaseTarget = async ({ github, context, base, }) => await (0, gha_core_1.fetchPullRequestList)({ github, context, base, state: 'open' });
 exports.fetchPendingPRsBaseTarget = fetchPendingPRsBaseTarget;
 /**
  * @desc target branchにmerge済みのブランチタイトル一覧を取得する
  * @see https://docs.github.com/ja/rest/repos/repos?apiVersion=2022-11-28
  */
 const fetchMergedBasePRsTitle = async ({ github, context, base, }) => {
-    const response = await (0, core_1.fetchPullRequestList)({
+    const response = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
         base,
@@ -36,7 +36,7 @@ const fetchMergedBasePRsTitle = async ({ github, context, base, }) => {
 exports.fetchMergedBasePRsTitle = fetchMergedBasePRsTitle;
 /** @desc 自身にmergeされたプルリクエストを取得する */
 const fetchMergedSelfPRs = async ({ github, context, prNumber, }) => {
-    return await (0, core_1.fetchPullRequestList)({
+    return await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
         pull_number: prNumber,
@@ -49,7 +49,7 @@ exports.fetchMergedSelfPRs = fetchMergedSelfPRs;
 const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => {
     // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
     // これを自身にmergeされたプルリクエストメソッド
-    const fromMergedPRs = await (0, core_1.fetchPullRequestList)({
+    const fromMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
         base: from,
@@ -57,7 +57,7 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     // baseにmergeされたpull requestを取得する
-    const baseMergedPRs = await (0, core_1.fetchPullRequestList)({
+    const baseMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
         base,
@@ -76,7 +76,7 @@ exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
 const fetchBranchBodyMessage = async ({ github, context, branch, }) => {
-    const br = await (0, core_1.fetchBranch)({
+    const br = await (0, gha_core_1.fetchBranch)({
         github,
         context,
         branch,

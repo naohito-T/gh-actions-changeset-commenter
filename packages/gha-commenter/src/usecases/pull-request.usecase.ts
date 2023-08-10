@@ -1,5 +1,4 @@
-import { updatePullRequestMessage } from 'gha-core/src/core';
-import { GitHubContext } from 'gha-core/src/types';
+import { GitHubContext, updatePullRequestMessage } from 'gha-core';
 import { fetchPRBodyMessage, fetchPRsMergedInFromNotBase } from '../repository';
 import { CustomGitHubContext } from '../types';
 

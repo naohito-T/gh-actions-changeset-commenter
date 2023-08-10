@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pullRequestUsecase = void 0;
-const core_1 = require("gha-core/src/core");
+const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc pull_request eventの際に使用するusecase */
 const pullRequestUsecase = async ({ github, context, base = 'develop', // merge先
@@ -23,7 +23,7 @@ from = 'develop', }) => {
         console.log('No PRs merged into develop but not into main.');
         return;
     }
-    await (0, core_1.updatePullRequestMessage)({
+    await (0, gha_core_1.updatePullRequestMessage)({
         github,
         context,
         prNumber,

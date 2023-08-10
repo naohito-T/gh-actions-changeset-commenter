@@ -1,5 +1,4 @@
-import { updateBranchBodyMessage } from 'gha-core/src/core';
-import { GitHubContext } from 'gha-core/src/types';
+import { GitHubContext,updateBranchBodyMessage } from 'gha-core';
 import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseBranch } from '../types';
 

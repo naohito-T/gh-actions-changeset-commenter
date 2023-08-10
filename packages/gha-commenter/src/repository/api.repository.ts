@@ -1,5 +1,4 @@
-import { fetchPullRequest, fetchPullRequestList, fetchBranch } from 'gha-core/src/core';
-import { GitHubContext, TargetPullRequestNumber, RefBranch } from 'gha-core/src/types';
+import { fetchPullRequest, fetchPullRequestList, fetchBranch, GitHubContext, TargetPullRequestNumber, RefBranch } from 'gha-core';
 import { FromBranch, BaseBranch } from '../types';
 
 /** -------------------

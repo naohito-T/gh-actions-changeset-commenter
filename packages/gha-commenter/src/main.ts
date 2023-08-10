@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { GitHubContext, errorHandler } from 'gha-core/src/index';
+import { GitHubContext, errorHandler } from 'gha-core';
 import { pullRequestUsecase, pushUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
 

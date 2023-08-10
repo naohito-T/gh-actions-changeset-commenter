@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.main = void 0;
 const core = __importStar(require("@actions/core"));
-const index_1 = require("gha-core/src/index");
+const gha_core_1 = require("gha-core");
 const usecases_1 = require("./usecases");
 /**
  * @desc main ブランチに今までコミットされたコミットメッセージを付与する
@@ -47,7 +47,7 @@ from = 'develop', }) => {
         }
     }
     catch (e) {
-        const { message } = (0, index_1.errorHandler)(e);
+        const { message } = (0, gha_core_1.errorHandler)(e);
         message
             ? core.setFailed(message)
             : // 差分がないとき

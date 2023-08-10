@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pushUsecase = void 0;
-const core_1 = require("gha-core/src/core");
+const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc push eventの際に使用するusecase */
 const pushUsecase = async ({ github, context, base = 'main', // merge先
@@ -19,7 +19,7 @@ const pushUsecase = async ({ github, context, base = 'main', // merge先
         console.log('No PRs merged into develop but not into main.');
         return;
     }
-    await (0, core_1.updateBranchBodyMessage)({
+    await (0, gha_core_1.updateBranchBodyMessage)({
         github,
         context,
         branch: branchName,
