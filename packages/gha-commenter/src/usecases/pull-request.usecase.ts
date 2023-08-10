@@ -12,8 +12,6 @@ export const pullRequestUsecase = async ({
   base = 'develop', // merge先
   from = 'develop',
 }: GitHubContext & CustomGitHubContext) => {
-  // 基底ブランチとプルリクエストで分ける必要があるかもしれない
-  // 現在のプルリクを取得（developとする）怪しいかも
   const prNumber = context.payload.pull_request?.number;
   console.log(`${JSON.stringify(context)}`);
   if (!prNumber) throw new Error('Pull request number not found.');
@@ -21,7 +19,7 @@ export const pullRequestUsecase = async ({
   console.log(`start. target branch ${base} target pull request${prNumber}`);
   // 現在のプルリクのbodyを取得する
   const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });
-  const mergedPRsTitleList = await fetchPRsMergedInFromNotBase({
+  const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
     github,
     context,
     base, // merge先
@@ -29,9 +27,9 @@ export const pullRequestUsecase = async ({
   });
 
   console.log(`start. pull request ${JSON.stringify(fromBodyMessage)}`);
-  console.log(`start. pull request base ${JSON.stringify(mergedPRsTitleList)}`);
+  console.log(`start. pull request base ${JSON.stringify(mergedPRsHtmlLinks)}`);
 
-  if (mergedPRsTitleList.length === 0) {
+  if (mergedPRsHtmlLinks.length === 0) {
     console.log('No PRs merged into develop but not into main.');
     return;
   }
@@ -40,6 +38,6 @@ export const pullRequestUsecase = async ({
     github,
     context,
     prNumber,
-    body: `- ${mergedPRsTitleList.map((d) => d.htmlLink).join('\n')}`,
+    body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
   });
 };

@@ -67,7 +67,7 @@ export const fetchPRsMergedInFromNotBase = async ({
   context,
   base,
   from,
-}: GitHubContext & BaseBranch & FromBranch): Promise<UpdateBodyMessage[]> => {
+}: GitHubContext & BaseBranch & FromBranch): Promise<string[]> => {
   // Step 1: developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
   // これを自身にmergeされたプルリクエストメソッド
   const fromMergedPRs = await fetchPullRequestList({
@@ -93,5 +93,5 @@ export const fetchPRsMergedInFromNotBase = async ({
         developPR.merged_at &&
         !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
     )
-    .map((pr) => ({ title: pr.title, htmlLink: pr._links.html.href }));
+    .map((pr) => pr._links.html.href);
 };
