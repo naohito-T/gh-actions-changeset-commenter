@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
-import { updatePullRequestMessage } from 'gha-core';
 import { GitHubContext } from 'gha-core/src/types';
-import { fetchPRBodyMessage, fetchPRsMergedInFromNotBase } from './commenter.usecase';
+import { errorHandler } from 'gha-core';
+import { pullRequestUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
 
 /**
@@ -15,37 +15,23 @@ export const main = async ({
   from = 'develop',
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
-    // 基底ブランチとプルリクエストで分ける必要があるかもしれない
-    // 現在のプルリクを取得（developとする）怪しいかも
-    const prNumber = context.payload.pull_request?.number;
-    const branch = context.ref;
-    console.log(`${JSON.stringify(context)}`);
-    if (!prNumber) throw new Error('Pull request number not found.');
-
-    console.log(`start. target branch ${base} target pull request${prNumber}`);
-    // 現在のプルリクのbodyを取得する
-    const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });
-    const mergedPRsTitleList = await fetchPRsMergedInFromNotBase({
-      github,
-      context,
-      base, // merge先
-      from,
-    });
-    console.log(`start. pull request ${JSON.stringify(fromBodyMessage)}`);
-    console.log(`start. pull request base ${JSON.stringify(mergedPRsTitleList)}`);
-
-    if (mergedPRsTitleList.length === 0) {
-      console.log('No PRs merged into develop but not into main.');
-      return;
+    console.log(`start context: ${JSON.stringify(context)}`)
+    const event = context.eventName;
+    switch (event) {
+      case 'push':
+        return;
+      case 'pull_request':
+        await pullRequestUsecase({github, context, base, from})
+        break;
+      default:
+        throw new Error('This event is not supported.');
     }
-
-    await updatePullRequestMessage({
-      github,
-      context,
-      prNumber,
-      body: `${fromBodyMessage}\n${mergedPRsTitleList.join('\n')}`,
-    });
   } catch (e: unknown) {
-    if (e instanceof Error) core.setFailed(e.message);
+    const { message } = errorHandler(e);
+    message
+      ? core.setFailed(message)
+      // 差分がないとき
+      : core.error('No PRs merged into ${} but not into ${}.');
+      // : core.error(`No PRs merged into ${} but not into ${}.`);
   }
 };

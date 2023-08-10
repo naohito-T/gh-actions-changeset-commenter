@@ -1,6 +1,6 @@
 import { fetchPullRequest, fetchPullRequestList } from 'gha-core';
-import { GitHubContext, PullRequestStatus, TargetPullRequestNumber } from 'gha-core/src/types';
-import { FromBranch, BaseBranch } from './types';
+import { GitHubContext, TargetPullRequestNumber } from 'gha-core/src/types';
+import { FromBranch, BaseBranch } from '../types';
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
 export const fetchPRBodyMessage = async ({
