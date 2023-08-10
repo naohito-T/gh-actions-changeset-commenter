@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { GitHubContext } from 'gha-core/src/types';
-import { errorHandler } from 'gha-core';
+import { updatePullRequestMessage } from 'gha-core/src/core';
+import { errorHandler } from 'gha-core/src/error';
 import { pullRequestUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
 
@@ -16,8 +17,8 @@ export const main = async ({
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
     console.log(`start context: ${JSON.stringify(context)}`);
-    const event = context.eventName;
-    switch (event) {
+    let body: string;
+    switch (context.eventName) {
       case 'push':
         return;
       case 'pull_request':

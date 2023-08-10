@@ -3,7 +3,7 @@ import {
   TargetPullRequestNumber,
   UpdatePullRequestMessage,
   CustomArgs,
-} from './types';
+} from '../types';
 
 /** @desc プルリクエストを取得する */
 export const fetchPullRequest = async ({

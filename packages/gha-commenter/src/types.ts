@@ -1,6 +1,9 @@
+/** @desc PR元 */
 export interface FromBranch {
   from: string;
 }
+
+/** @desc PRのmerge先 */
 export interface BaseBranch {
   base: string;
 }

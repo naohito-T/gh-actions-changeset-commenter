@@ -6,3 +6,5 @@ export type NumericRange<
 > = ARR['length'] extends END
   ? ACC | START | END
   : NumericRange<START, END, [...ARR, 1], ARR[START] extends undefined ? ACC : ACC | ARR['length']>;
+
+export type NonSlashedString<S extends string> = S extends `/${string}` ? never : S;

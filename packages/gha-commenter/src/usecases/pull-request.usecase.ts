@@ -1,11 +1,9 @@
-import { updatePullRequestMessage } from 'gha-core';
+import { updatePullRequestMessage } from 'gha-core/src/core';
 import { GitHubContext } from 'gha-core/src/types';
 import { fetchPRBodyMessage, fetchPRsMergedInFromNotBase } from '../repository';
 import { CustomGitHubContext } from '../types';
 
-/**
- * @desc pull_request eventの際に使用するusecase
- */
+/** @desc pull_request eventの際に使用するusecase */
 export const pullRequestUsecase = async ({
   github,
   context,
@@ -16,8 +14,6 @@ export const pullRequestUsecase = async ({
   console.log(`${JSON.stringify(context)}`);
   if (!prNumber) throw new Error('Pull request number not found.');
 
-  console.log(`start. target branch ${base} target pull request${prNumber}`);
-  // 現在のプルリクのbodyを取得する
   const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
     github,

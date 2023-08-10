@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./context.type"), exports);
 __exportStar(require("./pull-request.type"), exports);
+__exportStar(require("./branch.type"), exports);
