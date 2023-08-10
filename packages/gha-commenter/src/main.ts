@@ -15,16 +15,20 @@ export const main = async ({
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
     console.log(`start context: ${JSON.stringify(context)}`);
+    console.log(`start context.eventName: ${context.eventName}`);
     let body: string;
     switch (context.eventName) {
       case 'push':
         await pushUsecase({ github, context, base });
+        break;
       case 'pull_request':
         await pullRequestUsecase({ github, context, base, from });
         break;
       default:
         throw new Error('This event is not supported.');
     }
+
+    core.setOutput('comment-id', 'actions')
   } catch (e: unknown) {
     const { message } = errorHandler(e);
     message

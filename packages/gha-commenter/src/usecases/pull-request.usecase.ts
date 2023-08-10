@@ -10,7 +10,6 @@ export const pullRequestUsecase = async ({
   from = 'develop',
 }: GitHubContext & CustomGitHubContext) => {
   const prNumber = context.payload.pull_request?.number;
-  console.log(`${JSON.stringify(context)}`);
   if (!prNumber) throw new Error('Pull request number not found.');
 
   const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });

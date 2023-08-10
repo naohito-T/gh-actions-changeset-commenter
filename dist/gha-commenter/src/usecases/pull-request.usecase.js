@@ -7,7 +7,6 @@ const repository_1 = require("../repository");
 const pullRequestUsecase = async ({ github, context, base = 'develop', // merge先
 from = 'develop', }) => {
     const prNumber = context.payload.pull_request?.number;
-    console.log(`${JSON.stringify(context)}`);
     if (!prNumber)
         throw new Error('Pull request number not found.');
     const fromBodyMessage = await (0, repository_1.fetchPRBodyMessage)({ github, context, prNumber });

@@ -35,16 +35,19 @@ const main = async ({ github, context, base = 'develop', // merge先
 from = 'develop', }) => {
     try {
         console.log(`start context: ${JSON.stringify(context)}`);
+        console.log(`start context.eventName: ${context.eventName}`);
         let body;
         switch (context.eventName) {
             case 'push':
                 await (0, usecases_1.pushUsecase)({ github, context, base });
+                break;
             case 'pull_request':
                 await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
                 break;
             default:
                 throw new Error('This event is not supported.');
         }
+        core.setOutput('comment-id', 'actions');
     }
     catch (e) {
         const { message } = (0, gha_core_1.errorHandler)(e);

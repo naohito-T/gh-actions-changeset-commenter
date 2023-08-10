@@ -7,7 +7,6 @@ const repository_1 = require("../repository");
 const pushUsecase = async ({ github, context, base = 'main', // merge先
  }) => {
     const branchName = context.ref.replace('refs/heads/', '');
-    console.log(`${JSON.stringify(context)}`);
     const mergedPRsHtmlLinks = await (0, repository_1.fetchPRsMergedInFromNotBase)({
         github,
         context,

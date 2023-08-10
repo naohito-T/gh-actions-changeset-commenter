@@ -9,7 +9,6 @@ export const pushUsecase = async ({
   base = 'main', // merge先
 }: GitHubContext & BaseBranch) => {
   const branchName = context.ref.replace('refs/heads/', '');
-  console.log(`${JSON.stringify(context)}`);
 
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
     github,
