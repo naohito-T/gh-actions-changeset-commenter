@@ -38,7 +38,7 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/github-script@v6
-        name: test actions
+        name: Add branch commenter
         with:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
