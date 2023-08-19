@@ -17,4 +17,4 @@ export type TargetPullRequestNumber = { prNumber: number };
 export type UpdatePullRequestMessage = TargetPullRequestNumber & { body: string };
 
 /** @desc coreに拡張引数を渡したいとき */
-export type CustomArgs = Record<string, any>;
+export type CustomArgs = Record<string, unknown>;

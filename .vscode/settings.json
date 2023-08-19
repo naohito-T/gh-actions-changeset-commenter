@@ -1,6 +1,11 @@
 {
-  "typescript.format.enable": false,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.workingDirectories": [{ "mode": "auto" }],
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": true, // Prettier を実行
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true // ESLint を実行
+  },
+  "editor.formatOnType": false,
+  "editor.formatOnPaste": false,
+  "files.watcherExclude": {
+    "**/dist/**": true,
+  },
 }

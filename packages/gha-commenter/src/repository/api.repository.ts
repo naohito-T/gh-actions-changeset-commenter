@@ -1,10 +1,10 @@
 import {
   fetchPullRequest,
   fetchPullRequestList,
-  fetchBranch,
+  // fetchBranch,
   GitHubContext,
   TargetPullRequestNumber,
-  RefBranch,
+  // RefBranch,
 } from 'gha-core';
 import { FromBranch, BaseBranch } from '../types';
 
@@ -109,14 +109,15 @@ export const fetchPRsMergedInFromNotBase = async ({
  *  -------------------/
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-export const fetchBranchBodyMessage = async <T extends string>({
-  github,
-  context,
-  branch,
-}: GitHubContext & RefBranch<T>) => {
-  const br = await fetchBranch({
-    github,
-    context,
-    branch,
-  });
-};
+// 使いたい場合は使用する
+// export const fetchBranchBodyMessage = async <T extends string>({
+//   github,
+//   context,
+//   branch,
+// }: GitHubContext & RefBranch<T>) => {
+//   const br = await fetchBranch({
+//     github,
+//     context,
+//     branch,
+//   });
+// };

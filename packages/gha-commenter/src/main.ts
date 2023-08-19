@@ -14,9 +14,6 @@ export const main = async ({
   from, // merge元
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
-    console.log(`start context: ${JSON.stringify(context)}`);
-    console.log(`start context.eventName: ${context.eventName}`);
-
     switch (context.eventName) {
       case 'push':
         if (!base) throw new IncorrectError(`Missing parameters ${base}`);
@@ -27,7 +24,7 @@ export const main = async ({
         await pullRequestUsecase({ github, context, base, from });
         break;
       default:
-        throw new Error('This event is not supported.');
+        throw new IncorrectError('This event is not supported.');
     }
 
     core.setOutput('comment-id', 'actions');

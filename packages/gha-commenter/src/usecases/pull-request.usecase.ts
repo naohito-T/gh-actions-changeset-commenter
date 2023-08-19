@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { GitHubContext, IncorrectError, updatePullRequestMessage } from 'gha-core';
-import { fetchPRBodyMessage, fetchPRsMergedInFromNotBase } from '../repository';
+import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseWithFromBranch } from '../types';
 
 /** @desc pull_request eventの際に使用するusecase */
@@ -9,11 +9,10 @@ export const pullRequestUsecase = async ({
   context,
   base, // merge先
   from,
-}: GitHubContext & BaseWithFromBranch) => {
+}: GitHubContext & BaseWithFromBranch): Promise<void> => {
   const prNumber = context.payload.pull_request?.number;
   if (!prNumber) throw new IncorrectError('Pull request number not found.');
 
-  const fromBodyMessage = await fetchPRBodyMessage({ github, context, prNumber });
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
     github,
     context,
