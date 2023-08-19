@@ -13,16 +13,18 @@
   "author": "Naohito-T",
   "license": "MIT",
   "scripts": {
+    "jest": "jest -c ./tests/jest.config.ts",
+    "jest:w": "jest --watch -c ./tests/jest.config.ts",
+    "jest:c": "jest -c ./tests/jest.config.ts --coverage --silent",
     "t:check": "tsc --noEmit",
-    "l:check": "eslint --ext .js,.ts",
-    "l:write": "eslint --fix --ext .js,.ts",
+    "l:check": "eslint --max-warnings 0 --ext js,ts .",
+    "l:write": "eslint --fix --ext js,ts .",
     "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
     "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
     "build": "tsc -p tsconfig.json && ncc build"
   },
   "dependencies": {
     "gha-core": "*",
-    "gha-libs": "*",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   }

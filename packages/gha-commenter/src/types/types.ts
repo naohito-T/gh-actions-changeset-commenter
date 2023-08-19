@@ -10,6 +10,7 @@ export interface BaseBranch {
 
 export type BaseWithFromBranch = BaseBranch & FromBranch;
 
+/** @desc actions/github-script実行時に与えられる引数 */
 export type CustomGitHubContext = BaseBranch & Partial<FromBranch>;
 
 export interface UpdateBodyMessage {

@@ -4,7 +4,11 @@ import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseBranch } from '../types';
 
 /** @desc push eventの際に使用するusecase */
-export const pushUsecase = async ({ github, context, base }: GitHubContext & BaseBranch) => {
+export const pushUsecase = async ({
+  github,
+  context,
+  base,
+}: GitHubContext & BaseBranch): Promise<void> => {
   const branchName = context.ref.replace('refs/heads/', '');
 
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
