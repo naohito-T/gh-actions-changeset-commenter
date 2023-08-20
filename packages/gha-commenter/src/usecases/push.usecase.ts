@@ -10,6 +10,7 @@ export const pushUsecase = async ({
   context,
   base,
 }: GitHubContext & BaseBranch): Promise<void> => {
+  console.log(`context ${JSON.stringify(context)}`);
   const branchName = context.ref.replace('refs/heads/', '');
 
   core.debug(`branch: ${branchName}`);

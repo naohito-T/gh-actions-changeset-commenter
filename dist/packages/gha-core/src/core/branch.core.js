@@ -9,7 +9,10 @@ const fetchBranch = async ({ github, context, branch, ...args // この部分が
     ...args,
 });
 exports.fetchBranch = fetchBranch;
-/** @desc プルリクエストにマージメッセージを反映させる */
+/**
+ * @desc ブランチにマージメッセージを反映させる
+ * @deprecated 403で対応ができない
+ */
 const updateBranchBodyMessage = async ({ github, context, branch, body, }) => {
     await github.rest.repos.update({
         ...context.repo,

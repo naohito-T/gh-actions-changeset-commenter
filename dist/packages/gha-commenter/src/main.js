@@ -53,10 +53,7 @@ from, // merge元
     }
     catch (e) {
         const { message } = (0, gha_core_1.errorHandler)(e);
-        message
-            ? core.setFailed(message)
-            : // 差分がないとき
-                core.error('No PRs merged into ${} but not into ${}.');
+        core.setFailed(message);
     }
 };
 exports.main = main;
