@@ -6,7 +6,10 @@ on:
       - "packages/**"
       - "!**.md"
 
-permissions: write-all
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
 
 jobs:
   check-build:
