@@ -29,3 +29,17 @@ export const updateBranchBodyMessage = async <T extends string>({
     body,
   });
 };
+
+
+// export const updateBranchBodyMessage2 = async <T extends string>({
+//   github,
+//   context,
+//   branch,
+//   body,
+// }: GitHubContext & UpdateBranchBodyMessage<T>) => {
+//   await github.rest.repos.updateCommitComment({
+//     ...context.repo,
+//     comment_id: context.runNumber,
+//     // body,
+//   });
+// };
