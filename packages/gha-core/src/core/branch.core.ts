@@ -13,7 +13,10 @@ export const fetchBranch = async <T extends string>({
     ...args,
   });
 
-/** @desc プルリクエストにマージメッセージを反映させる */
+/**
+ * @desc ブランチにマージメッセージを反映させる
+ * @deprecated 403で対応ができない
+ */
 export const updateBranchBodyMessage = async <T extends string>({
   github,
   context,

@@ -1,15 +1,15 @@
-name: Auto Pull Request prod
+name: Check build
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - develop
+    paths:
+      - "packages/**"
+      - "!**.md"
 
 permissions: write-all
 
 jobs:
-  auto-pull-request-prod:
+  check-build:
     strategy:
       matrix:
         node-version: [16.19.1]
@@ -25,17 +25,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Create pull request but not if develop
-        run: |
-          if ! gh pr list -B main | grep OPEN; then
-            gh pr create \
-              --head develop \
-              --base main \
-              --title "Deploy to Release 🎉" \
-              --body "Deploy to Release 🎉"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build check
+        run: yarn all:build
 
       - uses: actions/github-script@v6
         name: Add branch commenter

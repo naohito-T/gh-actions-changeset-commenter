@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
-import { GitHubContext, updateBranchBodyMessage } from 'gha-core';
+import { inspect } from 'util';
+import { GitHubContext, fetchBranch, updateBranchBodyMessage } from 'gha-core';
 import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseBranch } from '../types';
 
@@ -11,6 +12,8 @@ export const pushUsecase = async ({
 }: GitHubContext & BaseBranch): Promise<void> => {
   const branchName = context.ref.replace('refs/heads/', '');
 
+  core.debug(`branch: ${branchName}`);
+
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
     github,
     context,
@@ -18,10 +21,21 @@ export const pushUsecase = async ({
     from: branchName,
   });
 
+  core.info(`HTML Links length${mergedPRsHtmlLinks.length}`);
+  core.debug(`HTML Links${inspect(mergedPRsHtmlLinks)}`);
+
   if (mergedPRsHtmlLinks.length === 0) {
     core.warning('No PRs merged into develop but not into main.');
     return;
   }
+
+  const targetBranch = await fetchBranch({
+    github,
+    context,
+    branch: branchName,
+  });
+
+  console.log(`target Branch${JSON.stringify(targetBranch)}`);
 
   await updateBranchBodyMessage<`${typeof branchName}`>({
     github,

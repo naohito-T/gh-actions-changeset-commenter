@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
   "private": "true",
-  "main": "./dist/main.js",
+  "main": "./dist/packages/gha-commenter/src/main.js",
   "bin": {
-    "gha-commenter": "./dist/gha-commenter/src/main.js"
+    "gha-commenter": "./dist/packages/gha-commenter/src/main.js"
   },
   "keywords": [
     "utils",
