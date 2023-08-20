@@ -43,4 +43,6 @@ jobs:
           script: |
             const script = require(`${process.env.GITHUB_WORKSPACE}/dist/packages/gha-commenter/src/main.js`)
             console.log(await script.main({ github, context, base: 'main' }))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
