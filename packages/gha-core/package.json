@@ -2,7 +2,7 @@
   "name": "gha-core",
   "version": "1.0.0",
   "description": "gh-action-utils-script core library",
-  "main": "../../dist/gha-core/index.js",
+  "main": "../../dist/packages/gha-core/index.js",
   "keywords": [
     "utils",
     "github actions",

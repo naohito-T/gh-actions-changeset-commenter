@@ -2,7 +2,7 @@
   "name": "gha-commenter",
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
-  "main": "../../dist/gha-commenter/src/main.js",
+  "main": "../../dist/packages/gha-commenter/src/main.js",
   "keywords": [
     "utils",
     "github actions",
