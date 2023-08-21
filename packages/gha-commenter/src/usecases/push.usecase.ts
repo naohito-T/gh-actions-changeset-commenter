@@ -10,9 +10,9 @@ export const pushUsecase = async ({
   context,
   base,
 }: GitHubContext & BaseBranch): Promise<void> => {
-  console.log(`context ${JSON.stringify(context)}`);
-  const branchName = context.ref.replace('refs/heads/', '');
+  core.debug(`context ${inspect(context)}`);
 
+  const branchName = context.ref.replace('refs/heads/', '');
   core.debug(`branch: ${branchName}`);
 
   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
@@ -22,7 +22,7 @@ export const pushUsecase = async ({
     from: branchName,
   });
 
-  core.info(`HTML Links length${mergedPRsHtmlLinks.length}`);
+  core.info(`HTML Links length: ${mergedPRsHtmlLinks.length}`);
   core.debug(`HTML Links${inspect(mergedPRsHtmlLinks)}`);
 
   if (mergedPRsHtmlLinks.length === 0) {
