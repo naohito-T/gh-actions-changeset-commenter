@@ -72,8 +72,10 @@ const fetchMergedSelfPRs = async ({ github, context, prNumber, }) => {
 exports.fetchMergedSelfPRs = fetchMergedSelfPRs;
 /** @desc base ← from: from merged not merge base */
 const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => {
-    // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
-    // これにはマージされていないがクローズされたプルリクエストも含まれる
+    /**
+     * @desc developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
+     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+     */
     const fromMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -82,8 +84,10 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect mergedPRsHtmlLinks${(0, util_1.inspect)(fromMergedPRs)}`);
-    // baseにmergeされたpull requestを取得する
-    // これにはマージされていないがクローズされたプルリクエストも含まれる
+    /**
+     * @desc baseにmergeされたpull requestを取得する
+     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+     */
     const baseMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -92,6 +96,13 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
+    console.log(fromMergedPRs.data
+        .filter((developPR) => 
+    // マージされたもののみをチェック
+    developPR.merged_at &&
+        // mainにマージされていないものをチェック
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
+        .map((pr) => pr._links.html.href), 'from merged check');
     return fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック
@@ -101,20 +112,3 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
-/** -------------------
- * Branch
- *  -------------------/
-
-/** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-// 使いたい場合は使用する
-// export const fetchBranchBodyMessage = async <T extends string>({
-//   github,
-//   context,
-//   branch,
-// }: GitHubContext & RefBranch<T>) => {
-//   const br = await fetchBranch({
-//     github,
-//     context,
-//     branch,
-//   });
-// };

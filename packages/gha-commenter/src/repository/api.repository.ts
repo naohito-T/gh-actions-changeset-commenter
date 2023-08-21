@@ -76,8 +76,10 @@ export const fetchPRsMergedInFromNotBase = async ({
   base,
   from,
 }: GitHubContext & BaseBranch & FromBranch): Promise<string[]> => {
-  // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
-  // これにはマージされていないがクローズされたプルリクエストも含まれる
+  /**
+   * @desc developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
+   * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+   */
   const fromMergedPRs = await fetchPullRequestList({
     github,
     context,
@@ -88,8 +90,10 @@ export const fetchPRsMergedInFromNotBase = async ({
 
   core.debug(`Inspect mergedPRsHtmlLinks${inspect(fromMergedPRs)}`);
 
-  // baseにmergeされたpull requestを取得する
-  // これにはマージされていないがクローズされたプルリクエストも含まれる
+  /**
+   * @desc baseにmergeされたpull requestを取得する
+   * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+   */
   const baseMergedPRs = await fetchPullRequestList({
     github,
     context,
@@ -99,6 +103,19 @@ export const fetchPRsMergedInFromNotBase = async ({
   });
 
   core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
+
+  console.log(
+    fromMergedPRs.data
+      .filter(
+        (developPR) =>
+          // マージされたもののみをチェック
+          developPR.merged_at &&
+          // mainにマージされていないものをチェック
+          !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number),
+      )
+      .map((pr) => pr._links.html.href),
+    'from merged check',
+  );
 
   return fromMergedPRs.data
     .filter(
@@ -111,20 +128,3 @@ export const fetchPRsMergedInFromNotBase = async ({
     .map((pr) => pr._links.html.href);
 };
 
-/** -------------------
- * Branch
- *  -------------------/
-
-/** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-// 使いたい場合は使用する
-// export const fetchBranchBodyMessage = async <T extends string>({
-//   github,
-//   context,
-//   branch,
-// }: GitHubContext & RefBranch<T>) => {
-//   const br = await fetchBranch({
-//     github,
-//     context,
-//     branch,
-//   });
-// };
