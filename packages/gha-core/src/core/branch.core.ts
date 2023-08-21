@@ -15,7 +15,7 @@ export const fetchBranch = async <T extends string>({
 
 /**
  * @desc ブランチにマージメッセージを反映させる
- * @deprecated 403で対応ができない
+ * @deprecated 基底ブランチに対しての更新は403で弾かれるため非推奨
  */
 export const updateBranchBodyMessage = async <T extends string>({
   github,
