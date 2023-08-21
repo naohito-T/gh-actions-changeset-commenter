@@ -91,9 +91,16 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
+    // return fromMergedPRs.data
+    //   .filter(
+    //     (developPR) =>
+    //       developPR.merged_at &&
+    //       !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
+    //   )
+    //   .map((pr) => pr._links.html.href);
     return fromMergedPRs.data
         .filter((developPR) => developPR.merged_at &&
-        !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title))
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
         .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;

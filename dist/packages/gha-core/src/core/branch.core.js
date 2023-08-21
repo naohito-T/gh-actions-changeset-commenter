@@ -11,7 +11,7 @@ const fetchBranch = async ({ github, context, branch, ...args // この部分が
 exports.fetchBranch = fetchBranch;
 /**
  * @desc ブランチにマージメッセージを反映させる
- * @deprecated 403で対応ができない
+ * @deprecated 基底ブランチに対しての更新は403で弾かれるため非推奨
  */
 const updateBranchBodyMessage = async ({ github, context, branch, body, }) => {
     await github.rest.repos.update({
