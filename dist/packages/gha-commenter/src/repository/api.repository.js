@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
+exports.getLatestCommit = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
 const core = __importStar(require("@actions/core"));
 const util_1 = require("util");
 const gha_core_1 = require("gha-core");
@@ -98,20 +98,6 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
     console.log(`develop merged pull re${fromMergedPRs.data.map((d) => d.number)}`);
     console.log(`main merged pull re${baseMergedPRs.data.map((d) => d.number)}`);
-    // console.log(
-    //   fromMergedPRs.data
-    //     .filter(
-    //       (developPR) =>
-    //         // マージされたもののみをチェック
-    //         developPR.merged_at &&
-    //         // mainにマージされていないものをチェック
-    //         !baseMergedPRs.data.some(
-    //           (mainPR) => mainPR.number === developPR.number && !mainPR.merged_at,
-    //         ),
-    //     )
-    //     .map((pr) => pr._links.html.href),
-    //   'from merged check',
-    // );
     return fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック
@@ -121,3 +107,25 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
+/**
+ * @desc 指定されたブランチのコミット一覧を取得する
+ * @note shaにはdevelopなどのブランチ名でもよい
+ */
+const getLatestCommit = async ({ github, context, base }) => {
+    // mainブランチのマージコミットを取得
+    const mainCommits = await (0, gha_core_1.fetchListCommit)({
+        github,
+        context,
+        sha: base,
+        per_page: 100,
+    });
+    /**
+     * @desc 最新のマージコミットを特定（下のやつみたい）
+     * @note Merge pull request #29 hoge
+     */
+    const latestMergeCommit = mainCommits.data.find((commit) => commit.commit.message.startsWith('Merge'));
+    if (!latestMergeCommit)
+        throw new Error('Not Latest MergeCommit');
+    return latestMergeCommit;
+};
+exports.getLatestCommit = getLatestCommit;
