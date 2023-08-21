@@ -104,6 +104,8 @@ export const fetchPRsMergedInFromNotBase = async ({
 
   core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
 
+  console.log(`main merged pull re${JSON.stringify(baseMergedPRs)}`);
+
   console.log(
     fromMergedPRs.data
       .filter(

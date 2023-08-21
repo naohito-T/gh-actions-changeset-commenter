@@ -96,6 +96,7 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
+    console.log(`main merged pull re${JSON.stringify(baseMergedPRs)}`);
     console.log(fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック

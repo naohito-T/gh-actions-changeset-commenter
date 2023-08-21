@@ -30,7 +30,7 @@ const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc push eventの際に使用するusecase */
 const pushUsecase = async ({ github, context, base, }) => {
-    console.log(`context ${JSON.stringify(context)}`);
+    core.debug(`context ${(0, util_1.inspect)(context)}`);
     const branchName = context.ref.replace('refs/heads/', '');
     core.debug(`branch: ${branchName}`);
     const mergedPRsHtmlLinks = await (0, repository_1.fetchPRsMergedInFromNotBase)({
@@ -39,7 +39,7 @@ const pushUsecase = async ({ github, context, base, }) => {
         base,
         from: branchName,
     });
-    core.info(`HTML Links length${mergedPRsHtmlLinks.length}`);
+    core.info(`HTML Links length: ${mergedPRsHtmlLinks.length}`);
     core.debug(`HTML Links${(0, util_1.inspect)(mergedPRsHtmlLinks)}`);
     if (mergedPRsHtmlLinks.length === 0) {
         core.warning('No PRs merged into develop but not into main.');
