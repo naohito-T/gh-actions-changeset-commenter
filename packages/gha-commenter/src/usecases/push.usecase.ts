@@ -2,9 +2,9 @@ import * as core from '@actions/core';
 import { inspect } from 'util';
 import {
   GitHubContext,
-  // updateBranchBodyMessage,
-  fetchPullRequestList,
-  updatePullRequestMessage,
+  updateBranchBodyMessage,
+  // fetchPullRequestList,
+  // updatePullRequestMessage,
 } from 'gha-core';
 import { fetchPRsMergedInFromNotBase } from '../repository';
 import { BaseBranch } from '../types';
@@ -35,28 +35,28 @@ export const pushUsecase = async ({
     return;
   }
 
-  // baseに向いているプルリクエスト一覧を取得する
-  const targetBranch = await fetchPullRequestList({
+  await updateBranchBodyMessage<`${typeof branchName}`>({
     github,
     context,
-    base,
-  });
-
-  console.log(`target Branch${JSON.stringify(targetBranch)}`);
-
-  const prn = targetBranch.data[0].number;
-
-  // await updateBranchBodyMessage<`${typeof branchName}`>({
-  //   github,
-  //   context,
-  //   branch: branchName,
-  //   body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
-  // });
-
-  await updatePullRequestMessage({
-    github,
-    context,
-    prNumber: prn,
+    branch: branchName,
     body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
   });
+
+  // baseに向いているプルリクエスト一覧を取得する
+  // const targetBranch = await fetchPullRequestList({
+  //   github,
+  //   context,
+  //   base,
+  // });
+
+  // console.log(`target Branch${JSON.stringify(targetBranch)}`);
+
+  // const prn = targetBranch.data[0].number;
+
+  // await updatePullRequestMessage({
+  //   github,
+  //   context,
+  //   prNumber: prn,
+  //   body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
+  // });
 };
