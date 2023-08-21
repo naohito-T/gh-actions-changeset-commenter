@@ -70,6 +70,7 @@ const pushUsecase = async ({ github, context, base, }) => {
     core.debug(`branch: ${fromBranch}`);
     const latestMergeCommit = await (0, repository_1.getLatestCommit)({ github, context, base });
     const since = latestMergeCommit?.commit?.committer?.date;
+    console.log(`since: ${since}`);
     if (!since) {
         core.warning('No PRs merged into develop but not into main.');
         return;
@@ -85,7 +86,10 @@ const pushUsecase = async ({ github, context, base, }) => {
         per_page: 100,
     });
     const prn = mergedBasePRs.data[0].number;
-    const mergedTopicPRs = mergedBasePRs.data.filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since));
+    console.log(`prnumber: ${prn}`);
+    const mergedTopicPRs = mergedBasePRs.data
+        .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
+        .map((d) => d.html_url);
     await (0, gha_core_1.updatePullRequestMessage)({
         github,
         context,

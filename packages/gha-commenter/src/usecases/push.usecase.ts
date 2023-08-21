@@ -62,6 +62,8 @@ export const pushUsecase = async ({
   const latestMergeCommit = await getLatestCommit({ github, context, base });
   const since = latestMergeCommit?.commit?.committer?.date;
 
+  console.log(`since: ${since}`);
+
   if (!since) {
     core.warning('No PRs merged into develop but not into main.');
     return;
@@ -79,9 +81,11 @@ export const pushUsecase = async ({
   });
 
   const prn = mergedBasePRs.data[0].number;
-  const mergedTopicPRs = mergedBasePRs.data.filter(
-    (pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since),
-  );
+  console.log(`prnumber: ${prn}`);
+  const mergedTopicPRs = mergedBasePRs.data
+    .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
+    .map((d) => d.html_url);
+
   await updatePullRequestMessage({
     github,
     context,
