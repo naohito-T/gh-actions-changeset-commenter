@@ -25,22 +25,22 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # - name: Create pull request but not if develop
-      #   run: |
-      #     if ! gh pr list -B develop | grep OPEN; then
-      #       gh pr create \
-      #         --head develop \
-      #         --base main \
-      #         --title "Deploy to production 🎉" \
-      #         --body "Deploy to production 🎉"
-      #     fi
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create pull request but not if develop
+        run: |
+          if ! gh pr list -B main | grep OPEN; then
+            gh pr create \
+              --head develop \
+              --base main \
+              --title "Deploy to Release 🎉" \
+              --body "Deploy to Release 🎉"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/github-script@v6
         name: Add branch commenter
         with:
           script: |
-            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
+            const script = require(`${process.env.GITHUB_WORKSPACE}/dist/packages/gha-commenter/src/main.js`)
             console.log(await script.main({ github, context, base: 'main' }))
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}

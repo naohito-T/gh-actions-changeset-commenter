@@ -1,10 +1,10 @@
+import * as core from '@actions/core';
+import { inspect } from 'util';
 import {
   fetchPullRequest,
   fetchPullRequestList,
-  fetchBranch,
   GitHubContext,
   TargetPullRequestNumber,
-  RefBranch,
 } from 'gha-core';
 import { FromBranch, BaseBranch } from '../types';
 
@@ -86,6 +86,8 @@ export const fetchPRsMergedInFromNotBase = async ({
     per_page: 100,
   });
 
+  core.debug(`Inspect mergedPRsHtmlLinks${inspect(fromMergedPRs)}`);
+
   // baseにmergeされたpull requestを取得する
   const baseMergedPRs = await fetchPullRequestList({
     github,
@@ -94,6 +96,8 @@ export const fetchPRsMergedInFromNotBase = async ({
     state: 'closed',
     per_page: 100,
   });
+
+  core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
 
   return fromMergedPRs.data
     .filter(
@@ -109,14 +113,15 @@ export const fetchPRsMergedInFromNotBase = async ({
  *  -------------------/
 
 /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-export const fetchBranchBodyMessage = async <T extends string>({
-  github,
-  context,
-  branch,
-}: GitHubContext & RefBranch<T>) => {
-  const br = await fetchBranch({
-    github,
-    context,
-    branch,
-  });
-};
+// 使いたい場合は使用する
+// export const fetchBranchBodyMessage = async <T extends string>({
+//   github,
+//   context,
+//   branch,
+// }: GitHubContext & RefBranch<T>) => {
+//   const br = await fetchBranch({
+//     github,
+//     context,
+//     branch,
+//   });
+// };
