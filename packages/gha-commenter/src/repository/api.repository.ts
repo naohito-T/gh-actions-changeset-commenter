@@ -104,11 +104,11 @@ export const fetchPRsMergedInFromNotBase = async ({
 
   core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
 
-  console.log(`develop merged pull re${JSON.stringify(fromMergedPRs)}`);
-  console.log(`main merged pull re${JSON.stringify(baseMergedPRs)}`);
+  console.log(`develop merged pull re${JSON.stringify(fromMergedPRs.data.map((d) => d.number))}`);
+  console.log(`main merged pull re${JSON.stringify(baseMergedPRs.data.map((d) => d.number))}`);
 
   console.log(
-    `main merged pull re${JSON.stringify(baseMergedPRs.data.filter((d) => !d.merged_at))}`,
+    `main merged pull re２２２２${JSON.stringify(baseMergedPRs.data.filter((d) => !d.merged_at))}`,
   );
 
   console.log(
