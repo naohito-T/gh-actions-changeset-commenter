@@ -5,6 +5,7 @@ import {
   fetchPullRequestList,
   GitHubContext,
   TargetPullRequestNumber,
+  fetchListCommit,
 } from 'gha-core';
 import { FromBranch, BaseBranch } from '../types';
 
@@ -107,21 +108,6 @@ export const fetchPRsMergedInFromNotBase = async ({
   console.log(`develop merged pull re${fromMergedPRs.data.map((d) => d.number)}`);
   console.log(`main merged pull re${baseMergedPRs.data.map((d) => d.number)}`);
 
-  // console.log(
-  //   fromMergedPRs.data
-  //     .filter(
-  //       (developPR) =>
-  //         // マージされたもののみをチェック
-  //         developPR.merged_at &&
-  //         // mainにマージされていないものをチェック
-  //         !baseMergedPRs.data.some(
-  //           (mainPR) => mainPR.number === developPR.number && !mainPR.merged_at,
-  //         ),
-  //     )
-  //     .map((pr) => pr._links.html.href),
-  //   'from merged check',
-  // );
-
   return fromMergedPRs.data
     .filter(
       (developPR) =>
@@ -135,3 +121,28 @@ export const fetchPRsMergedInFromNotBase = async ({
     .map((pr) => pr._links.html.href);
 };
 
+/**
+ * @desc 指定されたブランチのコミット一覧を取得する
+ * @note shaにはdevelopなどのブランチ名でもよい
+ */
+export const getLatestCommit = async ({ github, context, base }: GitHubContext & BaseBranch) => {
+  // mainブランチのマージコミットを取得
+  const mainCommits = await fetchListCommit({
+    github,
+    context,
+    sha: base,
+    per_page: 100,
+  });
+
+  /**
+   * @desc 最新のマージコミットを特定（下のやつみたい）
+   * @note Merge pull request #29 hoge
+   */
+  const latestMergeCommit = mainCommits.data.find((commit) =>
+    commit.commit.message.startsWith('Merge'),
+  );
+
+  if (!latestMergeCommit) throw new Error('Not Latest MergeCommit');
+
+  return latestMergeCommit;
+};

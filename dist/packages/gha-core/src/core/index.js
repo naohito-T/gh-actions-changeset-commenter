@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./branch.core"), exports);
 __exportStar(require("./pull-request.core"), exports);
+__exportStar(require("./commit.core"), exports);
