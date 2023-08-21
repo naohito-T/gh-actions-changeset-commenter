@@ -104,27 +104,23 @@ export const fetchPRsMergedInFromNotBase = async ({
 
   core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
 
-  console.log(`develop merged pull re${JSON.stringify(fromMergedPRs.data.map((d) => d.number))}`);
-  console.log(`main merged pull re${JSON.stringify(baseMergedPRs.data.map((d) => d.number))}`);
+  console.log(`develop merged pull re${fromMergedPRs.data.map((d) => d.number)}`);
+  console.log(`main merged pull re${baseMergedPRs.data.map((d) => d.number)}`);
 
-  console.log(
-    `main merged pull re２２２２${JSON.stringify(baseMergedPRs.data.filter((d) => !d.merged_at))}`,
-  );
-
-  console.log(
-    fromMergedPRs.data
-      .filter(
-        (developPR) =>
-          // マージされたもののみをチェック
-          developPR.merged_at &&
-          // mainにマージされていないものをチェック
-          !baseMergedPRs.data.some(
-            (mainPR) => mainPR.number === developPR.number && !mainPR.merged_at,
-          ),
-      )
-      .map((pr) => pr._links.html.href),
-    'from merged check',
-  );
+  // console.log(
+  //   fromMergedPRs.data
+  //     .filter(
+  //       (developPR) =>
+  //         // マージされたもののみをチェック
+  //         developPR.merged_at &&
+  //         // mainにマージされていないものをチェック
+  //         !baseMergedPRs.data.some(
+  //           (mainPR) => mainPR.number === developPR.number && !mainPR.merged_at,
+  //         ),
+  //     )
+  //     .map((pr) => pr._links.html.href),
+  //   'from merged check',
+  // );
 
   return fromMergedPRs.data
     .filter(
