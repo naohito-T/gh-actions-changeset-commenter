@@ -73,7 +73,7 @@ exports.fetchMergedSelfPRs = fetchMergedSelfPRs;
 /** @desc base ← from: from merged not merge base */
 const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => {
     // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
-    // これを自身にmergeされたプルリクエストメソッド
+    // これにはマージされていないがクローズされたプルリクエストも含まれる
     const fromMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -83,6 +83,7 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
     });
     core.debug(`Inspect mergedPRsHtmlLinks${(0, util_1.inspect)(fromMergedPRs)}`);
     // baseにmergeされたpull requestを取得する
+    // これにはマージされていないがクローズされたプルリクエストも含まれる
     const baseMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -91,15 +92,11 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
-    // return fromMergedPRs.data
-    //   .filter(
-    //     (developPR) =>
-    //       developPR.merged_at &&
-    //       !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
-    //   )
-    //   .map((pr) => pr._links.html.href);
     return fromMergedPRs.data
-        .filter((developPR) => developPR.merged_at &&
+        .filter((developPR) => 
+    // マージされたもののみをチェック
+    developPR.merged_at &&
+        // mainにマージされていないものをチェック
         !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
         .map((pr) => pr._links.html.href);
 };
