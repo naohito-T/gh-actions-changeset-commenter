@@ -45,25 +45,19 @@ const pushUsecase = async ({ github, context, base, }) => {
         core.warning('No PRs merged into develop but not into main.');
         return;
     }
-    await (0, gha_core_1.updateBranchBodyMessage)({
+    // baseに向いているプルリクエスト一覧を取得する
+    const targetBranch = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
-        branch: branchName,
+        base,
+    });
+    console.log(`target Branch${JSON.stringify(targetBranch)}`);
+    const prn = targetBranch.data[0].number;
+    await (0, gha_core_1.updatePullRequestMessage)({
+        github,
+        context,
+        prNumber: prn,
         body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
     });
-    // baseに向いているプルリクエスト一覧を取得する
-    // const targetBranch = await fetchPullRequestList({
-    //   github,
-    //   context,
-    //   base,
-    // });
-    // console.log(`target Branch${JSON.stringify(targetBranch)}`);
-    // const prn = targetBranch.data[0].number;
-    // await updatePullRequestMessage({
-    //   github,
-    //   context,
-    //   prNumber: prn,
-    //   body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
-    // });
 };
 exports.pushUsecase = pushUsecase;

@@ -99,11 +99,18 @@ export const fetchPRsMergedInFromNotBase = async ({
 
   core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
 
+  // return fromMergedPRs.data
+  //   .filter(
+  //     (developPR) =>
+  //       developPR.merged_at &&
+  //       !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
+  //   )
+  //   .map((pr) => pr._links.html.href);
   return fromMergedPRs.data
     .filter(
       (developPR) =>
         developPR.merged_at &&
-        !baseMergedPRs.data.some((mainPR) => mainPR.title === developPR.title),
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number),
     )
     .map((pr) => pr._links.html.href);
 };
