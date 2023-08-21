@@ -13,7 +13,10 @@ export const fetchBranch = async <T extends string>({
     ...args,
   });
 
-/** @desc プルリクエストにマージメッセージを反映させる */
+/**
+ * @desc ブランチにマージメッセージを反映させる
+ * @deprecated 403で対応ができない
+ */
 export const updateBranchBodyMessage = async <T extends string>({
   github,
   context,
@@ -26,3 +29,17 @@ export const updateBranchBodyMessage = async <T extends string>({
     body,
   });
 };
+
+
+// export const updateBranchBodyMessage2 = async <T extends string>({
+//   github,
+//   context,
+//   branch,
+//   body,
+// }: GitHubContext & UpdateBranchBodyMessage<T>) => {
+//   await github.rest.repos.updateCommitComment({
+//     ...context.repo,
+//     comment_id: context.sha,
+//     body,
+//   });
+// };

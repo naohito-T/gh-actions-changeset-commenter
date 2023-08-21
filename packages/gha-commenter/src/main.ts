@@ -30,9 +30,6 @@ export const main = async ({
     core.setOutput('comment-id', 'actions');
   } catch (e: unknown) {
     const { message } = errorHandler(e);
-    message
-      ? core.setFailed(message)
-      : // 差分がないとき
-        core.error('No PRs merged into ${} but not into ${}.');
+    core.setFailed(message);
   }
 };

@@ -25,21 +25,32 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pushUsecase = void 0;
 const core = __importStar(require("@actions/core"));
+const util_1 = require("util");
 const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc push eventの際に使用するusecase */
 const pushUsecase = async ({ github, context, base, }) => {
+    console.log(`context ${JSON.stringify(context)}`);
     const branchName = context.ref.replace('refs/heads/', '');
+    core.debug(`branch: ${branchName}`);
     const mergedPRsHtmlLinks = await (0, repository_1.fetchPRsMergedInFromNotBase)({
         github,
         context,
         base,
         from: branchName,
     });
+    core.info(`HTML Links length${mergedPRsHtmlLinks.length}`);
+    core.debug(`HTML Links${(0, util_1.inspect)(mergedPRsHtmlLinks)}`);
     if (mergedPRsHtmlLinks.length === 0) {
         core.warning('No PRs merged into develop but not into main.');
         return;
     }
+    const targetBranch = await (0, gha_core_1.fetchBranch)({
+        github,
+        context,
+        branch: branchName,
+    });
+    console.log(`target Branch${JSON.stringify(targetBranch)}`);
     await (0, gha_core_1.updateBranchBodyMessage)({
         github,
         context,
