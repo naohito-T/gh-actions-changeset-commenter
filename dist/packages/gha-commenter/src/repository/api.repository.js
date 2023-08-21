@@ -97,19 +97,20 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
     console.log(`main merged pull re${JSON.stringify(baseMergedPRs)}`);
+    console.log(`main merged pull re${JSON.stringify(baseMergedPRs.data.filter((d) => d.merged_at))}`);
     console.log(fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック
     developPR.merged_at &&
         // mainにマージされていないものをチェック
-        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number && mainPR.merged_at))
         .map((pr) => pr._links.html.href), 'from merged check');
     return fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック
     developPR.merged_at &&
         // mainにマージされていないものをチェック
-        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number && mainPR.merged_at))
         .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
