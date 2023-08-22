@@ -68,14 +68,14 @@ const pushUsecase = async ({ github, context, base, }) => {
     core.debug(`context ${(0, util_1.inspect)(context)}`);
     const fromBranch = context.ref.replace('refs/heads/', '');
     core.debug(`branch: ${fromBranch}`);
-    const latestMergeCommit = await (0, repository_1.getLatestCommit)({ github, context, base });
-    const since = latestMergeCommit?.commit?.committer?.date;
+    // 最新のマージコミットの日時を取得
+    const since = (await (0, repository_1.fetchLatestMergeCommit)({ github, context, base })).commit.committer?.date;
     console.log(`since: ${since}`);
     if (!since) {
         core.warning('No PRs merged into develop but not into main.');
         return;
     }
-    // baseに向いているプルリクエスト一覧を取得する
+    // 自身に向いているプルリクエスト一覧を取得する
     const mergedBasePRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -85,7 +85,16 @@ const pushUsecase = async ({ github, context, base, }) => {
         direction: 'desc',
         per_page: 100,
     });
-    const prn = mergedBasePRs.data[0].number;
+    // 自身
+    const selfMergedBase = await (0, gha_core_1.fetchPullRequestList)({
+        github,
+        context,
+        base,
+        sort: 'updated',
+        direction: 'desc',
+        per_page: 10,
+    });
+    const prn = selfMergedBase.data[0].number;
     console.log(`prnumber: ${prn}`);
     const mergedTopicPRs = mergedBasePRs.data
         .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))

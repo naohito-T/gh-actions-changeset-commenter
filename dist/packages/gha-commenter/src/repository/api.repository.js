@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLatestCommit = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
+exports.fetchLatestMergeCommit = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
 const core = __importStar(require("@actions/core"));
 const util_1 = require("util");
 const gha_core_1 = require("gha-core");
@@ -108,24 +108,20 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
 /**
- * @desc 指定されたブランチのコミット一覧を取得する
+ * @desc 指定されたbaseブランチの最新マージコミットを取得する
  * @note shaにはdevelopなどのブランチ名でもよい
+ * @note Merge pull request #29 hoge などの際sん1件を取得する
  */
-const getLatestCommit = async ({ github, context, base }) => {
-    // mainブランチのマージコミットを取得
-    const mainCommits = await (0, gha_core_1.fetchListCommit)({
+const fetchLatestMergeCommit = async ({ github, context, base }) => {
+    const baseCommits = await (0, gha_core_1.fetchListCommit)({
         github,
         context,
         sha: base,
         per_page: 100,
     });
-    /**
-     * @desc 最新のマージコミットを特定（下のやつみたい）
-     * @note Merge pull request #29 hoge
-     */
-    const latestMergeCommit = mainCommits.data.find((commit) => commit.commit.message.startsWith('Merge'));
+    const latestMergeCommit = baseCommits.data.find((commit) => commit.commit.message.startsWith('Merge'));
     if (!latestMergeCommit)
-        throw new Error('Not Latest MergeCommit');
+        throw new Error(`Not ${base} Latest MergeCommit`);
     return latestMergeCommit;
 };
-exports.getLatestCommit = getLatestCommit;
+exports.fetchLatestMergeCommit = fetchLatestMergeCommit;

@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import { inspect } from 'util';
 import { GitHubContext, fetchPullRequestList, updatePullRequestMessage } from 'gha-core';
-import { getLatestCommit } from '../repository';
+import { fetchLatestMergeCommit } from '../repository';
 import { BaseBranch } from '../types';
 
 /** @desc push eventの際に使用するusecase */
@@ -59,9 +59,8 @@ export const pushUsecase = async ({
   const fromBranch = context.ref.replace('refs/heads/', '');
   core.debug(`branch: ${fromBranch}`);
 
-  const latestMergeCommit = await getLatestCommit({ github, context, base });
-  const since = latestMergeCommit?.commit?.committer?.date;
-
+  // 最新のマージコミットの日時を取得
+  const since = (await fetchLatestMergeCommit({ github, context, base })).commit.committer?.date;
   console.log(`since: ${since}`);
 
   if (!since) {
@@ -69,19 +68,30 @@ export const pushUsecase = async ({
     return;
   }
 
-  // baseに向いているプルリクエスト一覧を取得する
+  // 自身に向いているプルリクエスト一覧を取得する
   const mergedBasePRs = await fetchPullRequestList({
     github,
     context,
     base: fromBranch,
     state: 'closed',
-    sort: 'updated',
-    direction: 'desc',
+    sort: 'updated', // 最新の更新順にソート
+    direction: 'desc', // 降順
     per_page: 100,
   });
 
-  const prn = mergedBasePRs.data[0].number;
+  // 自身
+  const selfMergedBase = await fetchPullRequestList({
+    github,
+    context,
+    base,
+    sort: 'updated', // 最新の更新順にソート
+    direction: 'desc', // 降順
+    per_page: 10,
+  });
+
+  const prn = selfMergedBase.data[0].number;
   console.log(`prnumber: ${prn}`);
+
   const mergedTopicPRs = mergedBasePRs.data
     .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
     .map((d) => d.html_url);
