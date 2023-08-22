@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
+exports.fetchLatestMergeCommit = exports.fetchPRsMergedInFromNotBase = exports.fetchMergedSelfPRs = exports.fetchMergedBasePRsTitle = exports.fetchPendingPRsBaseTarget = exports.fetchPRBodyMessage = void 0;
 const core = __importStar(require("@actions/core"));
 const util_1 = require("util");
 const gha_core_1 = require("gha-core");
@@ -72,8 +72,10 @@ const fetchMergedSelfPRs = async ({ github, context, prNumber, }) => {
 exports.fetchMergedSelfPRs = fetchMergedSelfPRs;
 /** @desc base ← from: from merged not merge base */
 const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => {
-    // developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
-    // これにはマージされていないがクローズされたプルリクエストも含まれる
+    /**
+     * @desc developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
+     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+     */
     const fromMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -82,8 +84,10 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect mergedPRsHtmlLinks${(0, util_1.inspect)(fromMergedPRs)}`);
-    // baseにmergeされたpull requestを取得する
-    // これにはマージされていないがクローズされたプルリクエストも含まれる
+    /**
+     * @desc baseにmergeされたpull requestを取得する
+     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
+     */
     const baseMergedPRs = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
@@ -92,29 +96,32 @@ const fetchPRsMergedInFromNotBase = async ({ github, context, base, from, }) => 
         per_page: 100,
     });
     core.debug(`Inspect baseMergedPRs${(0, util_1.inspect)(baseMergedPRs)}`);
+    console.log(`develop merged pull re${fromMergedPRs.data.map((d) => d.number)}`);
+    console.log(`main merged pull re${baseMergedPRs.data.map((d) => d.number)}`);
     return fromMergedPRs.data
         .filter((developPR) => 
     // マージされたもののみをチェック
     developPR.merged_at &&
         // mainにマージされていないものをチェック
-        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number))
+        !baseMergedPRs.data.some((mainPR) => mainPR.number === developPR.number && !mainPR.merged_at))
         .map((pr) => pr._links.html.href);
 };
 exports.fetchPRsMergedInFromNotBase = fetchPRsMergedInFromNotBase;
-/** -------------------
- * Branch
- *  -------------------/
-
-/** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
-// 使いたい場合は使用する
-// export const fetchBranchBodyMessage = async <T extends string>({
-//   github,
-//   context,
-//   branch,
-// }: GitHubContext & RefBranch<T>) => {
-//   const br = await fetchBranch({
-//     github,
-//     context,
-//     branch,
-//   });
-// };
+/**
+ * @desc 指定されたbaseブランチの最新マージコミットを取得する
+ * @note shaにはdevelopなどのブランチ名でもよい
+ * @note Merge pull request #29 hoge などの際sん1件を取得する
+ */
+const fetchLatestMergeCommit = async ({ github, context, base }) => {
+    const baseCommits = await (0, gha_core_1.fetchListCommit)({
+        github,
+        context,
+        sha: base,
+        per_page: 100,
+    });
+    const latestMergeCommit = baseCommits.data.find((commit) => commit.commit.message.startsWith('Merge'));
+    if (!latestMergeCommit)
+        throw new Error(`Not ${base} Latest MergeCommit`);
+    return latestMergeCommit;
+};
+exports.fetchLatestMergeCommit = fetchLatestMergeCommit;

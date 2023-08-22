@@ -29,35 +29,81 @@ const util_1 = require("util");
 const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc push eventの際に使用するusecase */
+// export const pushUsecase = async ({
+//   github,
+//   context,
+//   base,
+// }: GitHubContext & BaseBranch): Promise<void> => {
+//   core.debug(`context ${inspect(context)}`);
+//   const branchName = context.ref.replace('refs/heads/', '');
+//   core.debug(`branch: ${branchName}`);
+//   const mergedPRsHtmlLinks = await fetchPRsMergedInFromNotBase({
+//     github,
+//     context,
+//     base, // merge先
+//     from: branchName,
+//   });
+//   core.info(`HTML Links length: ${mergedPRsHtmlLinks.length}`);
+//   core.debug(`HTML Links${inspect(mergedPRsHtmlLinks)}`);
+//   if (mergedPRsHtmlLinks.length === 0) {
+//     core.warning('No PRs merged into develop but not into main.');
+//     return;
+//   }
+//   // baseに向いているプルリクエスト一覧を取得する
+//   const targetBranch = await fetchPullRequestList({
+//     github,
+//     context,
+//     base,
+//   });
+//   console.log(`target Branch${JSON.stringify(targetBranch)}`);
+//   const prn = targetBranch.data[0].number;
+//   await updatePullRequestMessage({
+//     github,
+//     context,
+//     prNumber: prn,
+//     body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
+//   });
+// };
 const pushUsecase = async ({ github, context, base, }) => {
-    console.log(`context ${JSON.stringify(context)}`);
-    const branchName = context.ref.replace('refs/heads/', '');
-    core.debug(`branch: ${branchName}`);
-    const mergedPRsHtmlLinks = await (0, repository_1.fetchPRsMergedInFromNotBase)({
-        github,
-        context,
-        base,
-        from: branchName,
-    });
-    core.info(`HTML Links length${mergedPRsHtmlLinks.length}`);
-    core.debug(`HTML Links${(0, util_1.inspect)(mergedPRsHtmlLinks)}`);
-    if (mergedPRsHtmlLinks.length === 0) {
+    core.debug(`context ${(0, util_1.inspect)(context)}`);
+    const fromBranch = context.ref.replace('refs/heads/', '');
+    core.debug(`branch: ${fromBranch}`);
+    // 最新のマージコミットの日時を取得
+    const since = (await (0, repository_1.fetchLatestMergeCommit)({ github, context, base })).commit.committer?.date;
+    console.log(`since: ${since}`);
+    if (!since) {
         core.warning('No PRs merged into develop but not into main.');
         return;
     }
-    // baseに向いているプルリクエスト一覧を取得する
-    const targetBranch = await (0, gha_core_1.fetchPullRequestList)({
+    // 自身に向いているプルリクエスト一覧を取得する
+    const mergedBasePRs = await (0, gha_core_1.fetchPullRequestList)({
+        github,
+        context,
+        base: fromBranch,
+        state: 'closed',
+        sort: 'updated',
+        direction: 'desc',
+        per_page: 100,
+    });
+    // 自身
+    const selfMergedBase = await (0, gha_core_1.fetchPullRequestList)({
         github,
         context,
         base,
+        sort: 'updated',
+        direction: 'desc',
+        per_page: 10,
     });
-    console.log(`target Branch${JSON.stringify(targetBranch)}`);
-    const prn = targetBranch.data[0].number;
+    const prn = selfMergedBase.data[0].number;
+    console.log(`prnumber: ${prn}`);
+    const mergedTopicPRs = mergedBasePRs.data
+        .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
+        .map((d) => d.html_url);
     await (0, gha_core_1.updatePullRequestMessage)({
         github,
         context,
         prNumber: prn,
-        body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
+        body: `${mergedTopicPRs.map((href) => `- ${href}`).join('\n')}`,
     });
 };
 exports.pushUsecase = pushUsecase;
