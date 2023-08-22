@@ -11,7 +11,7 @@ const fetchPullRequest = async ({ github, context, prNumber, ...args // この�
     });
 };
 exports.fetchPullRequest = fetchPullRequest;
-/** @desc プルリクエスト一覧を取得する */
+/** @desc baseに向いているプルリクエスト一覧を取得する */
 const fetchPullRequestList = async ({ github, context, base, ...args // この部分が任意のオブジェクトを受け取るための変更
  }) => {
     return await github.rest.pulls.list({
@@ -21,6 +21,19 @@ const fetchPullRequestList = async ({ github, context, base, ...args // この�
     });
 };
 exports.fetchPullRequestList = fetchPullRequestList;
+/** @desc fromに向いているプルリクをさガス */
+// export const fetchFromPullRequestList = async ({
+//   github,
+//   context,
+//   base,
+//   ...args // この部分が任意のオブジェクトを受け取るための変更
+// }: GitHubContext & { base?: string } & CustomArgs) => {
+//   return await github.rest.pulls.list({
+//     ...context.repo, // owner && repo
+//     base, // PR target base branch
+//     ...args,
+//   });
+// };
 /** @desc プルリクエストにマージメッセージを反映させる */
 const updatePullRequestMessage = async ({ github, context, prNumber, body, }) => {
     await github.rest.pulls.update({

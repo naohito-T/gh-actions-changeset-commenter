@@ -122,27 +122,25 @@ export const fetchPRsMergedInFromNotBase = async ({
 };
 
 /**
- * @desc 指定されたブランチのコミット一覧を取得する
+ * @desc 指定されたbaseブランチの最新マージコミットを取得する
  * @note shaにはdevelopなどのブランチ名でもよい
+ * @note Merge pull request #29 hoge などの際sん1件を取得する
  */
-export const getLatestCommit = async ({ github, context, base }: GitHubContext & BaseBranch) => {
-  // mainブランチのマージコミットを取得
-  const mainCommits = await fetchListCommit({
+export const fetchLatestMergeCommit = async ({ github, context, base }: GitHubContext & BaseBranch) => {
+  const baseCommits = await fetchListCommit({
     github,
     context,
     sha: base,
     per_page: 100,
   });
 
-  /**
-   * @desc 最新のマージコミットを特定（下のやつみたい）
-   * @note Merge pull request #29 hoge
-   */
-  const latestMergeCommit = mainCommits.data.find((commit) =>
+  const latestMergeCommit = baseCommits.data.find((commit) =>
     commit.commit.message.startsWith('Merge'),
   );
 
-  if (!latestMergeCommit) throw new Error('Not Latest MergeCommit');
+  if (!latestMergeCommit) throw new Error(`Not ${base} Latest MergeCommit`);
 
   return latestMergeCommit;
 };
+
+
