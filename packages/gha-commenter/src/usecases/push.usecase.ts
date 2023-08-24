@@ -27,7 +27,7 @@ export const pushUsecase = async ({
   }
 
   const mergedFromPRs = await r.fetchMergedPRs({ base: fromBranch });
-  const latestBasePR = (await r.fetchMergedPRs({ base, per_page: 10 })).data[0].number;
+  const latestBasePR = (await r.fetchPendingPRs({ base, per_page: 10 })).data[0].number;
 
   core.debug(`pull_request number: ${latestBasePR}`);
 

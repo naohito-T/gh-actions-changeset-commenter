@@ -50,6 +50,8 @@ class ApiRepository {
         context: this.context,
         base,
         state: 'open',
+        sort: 'updated',
+        direction: 'desc',
         per_page,
     });
     /** @desc 指定のbase branchに向いておりmergeされたPRsを取得する */
