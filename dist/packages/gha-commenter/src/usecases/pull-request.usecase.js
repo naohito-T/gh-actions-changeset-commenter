@@ -28,16 +28,14 @@ const core = __importStar(require("@actions/core"));
 const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
 /** @desc pull_request eventの際に使用するusecase */
-const pullRequestUsecase = async ({ github, context, base, // merge先
-from, }) => {
+const pullRequestUsecase = async ({ github, context, base, from, }) => {
     const prNumber = context.payload.pull_request?.number;
     if (!prNumber)
         throw new gha_core_1.IncorrectError('Pull request number not found.');
-    const mergedPRsHtmlLinks = await (0, repository_1.fetchPRsMergedInFromNotBase)({
-        github,
-        context,
+    const r = new repository_1.ApiRepository(github, context);
+    const mergedPRsHtmlLinks = await r.fetchPRsMergedInFromNotBase({
         base,
-        from,
+        from, // merge元
     });
     if (mergedPRsHtmlLinks.length === 0) {
         core.warning('No PRs merged into develop but not into main.');
