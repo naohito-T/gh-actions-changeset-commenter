@@ -3,10 +3,7 @@ import { GitHubContext, IncorrectError, errorHandler } from 'gha-core';
 import { pullRequestUsecase, pushUsecase } from './usecases';
 import { CustomGitHubContext } from './types';
 
-/**
- * @desc main ブランチに今までコミットされたコミットメッセージを付与する
- * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
- */
+/** @desc Pull Requestに対してbase ← fromの差分のPull Requestタイトルを反映する */
 export const main = async ({
   github,
   context,
@@ -16,18 +13,19 @@ export const main = async ({
   try {
     switch (context.eventName) {
       case 'push':
-        if (!base) throw new IncorrectError(`Missing parameters ${base}`);
+        if (!base) throw new IncorrectError(`Missing parameters ${base}: Please README`);
         await pushUsecase({ github, context, base });
         break;
       case 'pull_request':
-        if (!base || !from) throw new IncorrectError(`Missing parameters ${base} or ${from}`);
+        if (!base || !from)
+          throw new IncorrectError(`Missing parameters ${base} or ${from} Please README`);
         await pullRequestUsecase({ github, context, base, from });
         break;
       default:
         throw new IncorrectError('This event is not supported.');
     }
 
-    core.setOutput('comment-id', 'actions');
+    core.setOutput('result', ``);
   } catch (e: unknown) {
     const { message } = errorHandler(e);
     core.setFailed(message);

@@ -27,10 +27,7 @@ exports.main = void 0;
 const core = __importStar(require("@actions/core"));
 const gha_core_1 = require("gha-core");
 const usecases_1 = require("./usecases");
-/**
- * @desc main ブランチに今までコミットされたコミットメッセージを付与する
- * @note デバッグは｀github.log.debug｀シークレット `ACTIONS_STEP_DEBUG` をtrueに設定した場合のみ出力される
- */
+/** @desc Pull Requestに対してbase ← fromの差分のPull Requestタイトルを反映する */
 const main = async ({ github, context, base, // merge先
 from, // merge元
  }) => {
@@ -38,18 +35,18 @@ from, // merge元
         switch (context.eventName) {
             case 'push':
                 if (!base)
-                    throw new gha_core_1.IncorrectError(`Missing parameters ${base}`);
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base}: Please README`);
                 await (0, usecases_1.pushUsecase)({ github, context, base });
                 break;
             case 'pull_request':
                 if (!base || !from)
-                    throw new gha_core_1.IncorrectError(`Missing parameters ${base} or ${from}`);
+                    throw new gha_core_1.IncorrectError(`Missing parameters ${base} or ${from} Please README`);
                 await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
                 break;
             default:
                 throw new gha_core_1.IncorrectError('This event is not supported.');
         }
-        core.setOutput('comment-id', 'actions');
+        core.setOutput('result', ``);
     }
     catch (e) {
         const { message } = (0, gha_core_1.errorHandler)(e);

@@ -5,6 +5,7 @@ import {
   fetchMergedBasePRsTitle,
   fetchMergedSelfPRs,
   fetchPRsMergedInFromNotBase,
+  // ApiRepository
 } from '../../../../src/repository';
 
 const mockedGithubRestRepos = {
