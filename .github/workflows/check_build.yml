@@ -6,8 +6,6 @@ on:
       - "packages/**"
       - "!**.md"
 
-permissions: write-all
-
 jobs:
   check-build:
     strategy:
@@ -27,10 +25,3 @@ jobs:
 
       - name: Build check
         run: yarn all:build
-
-      # - uses: actions/github-script@v6
-      #   name: Add branch commenter
-      #   with:
-      #     script: |
-      #       const script = require(`${process.env.GITHUB_WORKSPACE}/dist/gha-commenter/src/main.js`)
-      #       console.log(await script.main({ github, context, base: 'main', from: 'develop' }))
