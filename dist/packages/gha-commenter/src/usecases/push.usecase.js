@@ -39,12 +39,12 @@ const pushUsecase = async ({ github, context, base, }) => {
     core.debug(`from_branch: ${fromBranch}`);
     const since = (await r.fetchLatestMergeCommit({ base })).commit.committer?.date;
     if (!since) {
-        core.warning('No PRs merged into develop but not into main.');
+        core.warning(`Not found. latest commit ${base}`);
         return;
     }
     const mergedFromPRs = await r.fetchMergedPRs({ base: fromBranch });
     const latestBasePR = (await r.fetchPendingPRs({ base, per_page: 10 })).data[0].number;
-    core.debug(`pull_request number: ${latestBasePR}`);
+    core.debug(`Update body pull_request number: ${latestBasePR}`);
     const mergedTopicPRs = mergedFromPRs.data
         .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
         .map((d) => `- ${d.html_url}`);
