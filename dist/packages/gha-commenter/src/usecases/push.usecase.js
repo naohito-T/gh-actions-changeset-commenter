@@ -43,7 +43,7 @@ const pushUsecase = async ({ github, context, base, }) => {
         return;
     }
     const mergedFromPRs = await r.fetchMergedPRs({ base: fromBranch });
-    const latestBasePR = (await r.fetchMergedPRs({ base, per_page: 10 })).data[0].number;
+    const latestBasePR = (await r.fetchPendingPRs({ base, per_page: 10 })).data[0].number;
     core.debug(`pull_request number: ${latestBasePR}`);
     const mergedTopicPRs = mergedFromPRs.data
         .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))

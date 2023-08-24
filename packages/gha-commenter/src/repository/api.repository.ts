@@ -36,6 +36,8 @@ export class ApiRepository {
       context: this.context,
       base,
       state: 'open',
+      sort: 'updated', // 最新の更新順にソート
+      direction: 'desc', // 降順
       per_page,
     });
 
