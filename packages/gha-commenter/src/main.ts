@@ -8,18 +8,15 @@ export const main = async ({
   github,
   context,
   base, // merge先
-  from, // merge元
 }: GitHubContext & CustomGitHubContext): Promise<void> => {
   try {
+    if (!base) throw new IncorrectError(`Missing parameters ${base}: Please README`);
     switch (context.eventName) {
       case 'push':
-        if (!base) throw new IncorrectError(`Missing parameters ${base}: Please README`);
         await pushUsecase({ github, context, base });
         break;
       case 'pull_request':
-        if (!base || !from)
-          throw new IncorrectError(`Missing parameters ${base} or ${from} Please README`);
-        await pullRequestUsecase({ github, context, base, from });
+        await pullRequestUsecase({ github, context, base });
         break;
       default:
         throw new IncorrectError('This event is not supported.');

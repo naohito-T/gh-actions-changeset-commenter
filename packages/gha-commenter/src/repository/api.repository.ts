@@ -74,52 +74,6 @@ export class ApiRepository {
     });
   };
 
-  /** @desc base ← from: from merged not merge base */
-  fetchPRsMergedInFromNotBase = async ({
-    base,
-    from,
-  }: BaseBranch & FromBranch): Promise<string[]> => {
-    /**
-     * @desc developにマージされたがmainにはマージされていないプルリクエストのタイトルを取得
-     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
-     */
-    const fromMergedPRs = await fetchPullRequestList({
-      github: this.github,
-      context: this.context,
-      base: from,
-      state: 'closed',
-      per_page: 100,
-    });
-
-    core.debug(`Inspect mergedPRsHtmlLinks${inspect(fromMergedPRs)}`);
-
-    /**
-     * @desc baseにmergeされたpull requestを取得する
-     * @note これにはマージされていないがクローズされたプルリクエストも含まれる
-     */
-    const baseMergedPRs = await fetchPullRequestList({
-      github: this.github,
-      context: this.context,
-      base,
-      state: 'closed',
-      per_page: 100,
-    });
-
-    core.debug(`Inspect baseMergedPRs${inspect(baseMergedPRs)}`);
-
-    return fromMergedPRs.data
-      .filter(
-        (developPR) =>
-          // マージされたもののみをチェック
-          developPR.merged_at &&
-          // mainにマージされていないものをチェック
-          !baseMergedPRs.data.some(
-            (mainPR) => mainPR.number === developPR.number && !mainPR.merged_at,
-          ),
-      )
-      .map((pr) => pr._links.html.href);
-  };
-
   /**
    * @desc 指定されたbaseブランチの最新マージコミットを取得する
    * @note shaにはdevelopなどのブランチ名でもよい
@@ -130,7 +84,7 @@ export class ApiRepository {
       github: this.github,
       context: this.context,
       sha: base,
-      per_page: 100,
+      per_page: 10,
     });
 
     const latestMergeCommit = baseCommits.data.find((commit) =>
