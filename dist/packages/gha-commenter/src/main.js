@@ -29,19 +29,16 @@ const gha_core_1 = require("gha-core");
 const usecases_1 = require("./usecases");
 /** @desc Pull Requestに対してbase ← fromの差分のPull Requestタイトルを反映する */
 const main = async ({ github, context, base, // merge先
-from, // merge元
  }) => {
     try {
+        if (!base)
+            throw new gha_core_1.IncorrectError(`Missing parameters ${base}: Please README`);
         switch (context.eventName) {
             case 'push':
-                if (!base)
-                    throw new gha_core_1.IncorrectError(`Missing parameters ${base}: Please README`);
                 await (0, usecases_1.pushUsecase)({ github, context, base });
                 break;
             case 'pull_request':
-                if (!base || !from)
-                    throw new gha_core_1.IncorrectError(`Missing parameters ${base} or ${from} Please README`);
-                await (0, usecases_1.pullRequestUsecase)({ github, context, base, from });
+                await (0, usecases_1.pullRequestUsecase)({ github, context, base });
                 break;
             default:
                 throw new gha_core_1.IncorrectError('This event is not supported.');

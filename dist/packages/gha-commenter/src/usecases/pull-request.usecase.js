@@ -27,25 +27,30 @@ exports.pullRequestUsecase = void 0;
 const core = __importStar(require("@actions/core"));
 const gha_core_1 = require("gha-core");
 const repository_1 = require("../repository");
-/** @desc pull_request eventの際に使用するusecase */
-const pullRequestUsecase = async ({ github, context, base, from, }) => {
+/**
+ * @desc pull_request eventの際に使用するusecase
+ * 1. baseブランチの最新マージコミットを取得する
+ * 2. from（自身）に向いていたclosedのプルリクエスト一覧を取得する
+ * 3. baseに向いているプルリクエスト一覧から最新を取得
+ * 4. fromにmergeされているプルリクでかつmergeの時間がbaseの最新mergeより未来のもの
+ * */
+const pullRequestUsecase = async ({ github, context, base, }) => {
     const prNumber = context.payload.pull_request?.number;
     if (!prNumber)
         throw new gha_core_1.IncorrectError('Pull request number not found.');
     const r = new repository_1.ApiRepository(github, context);
-    const mergedPRsHtmlLinks = await r.fetchPRsMergedInFromNotBase({
-        base,
-        from, // merge元
-    });
-    if (mergedPRsHtmlLinks.length === 0) {
-        core.warning('No PRs merged into develop but not into main.');
+    const fromBranch = context.ref.replace('refs/heads/', '');
+    core.debug(`from_branch: ${fromBranch}`);
+    core.debug(`Update body pull_request number: ${prNumber}`);
+    const since = (await r.fetchLatestMergeCommit({ base })).commit.committer?.date;
+    if (!since) {
+        core.warning(`Not found. latest commit ${base}`);
         return;
     }
-    await (0, gha_core_1.updatePullRequestMessage)({
-        github,
-        context,
-        prNumber,
-        body: `${mergedPRsHtmlLinks.map((href) => `- ${href}`).join('\n')}`,
-    });
+    const mergedFromPRs = await r.fetchMergedPRs({ base: fromBranch });
+    const mergedTopicPRs = mergedFromPRs.data
+        .filter((pr) => pr.merged_at && new Date(pr.merged_at) > new Date(since))
+        .map((d) => `- ${d.html_url}`);
+    await r.updatePrMessage({ prNumber, body: mergedTopicPRs });
 };
 exports.pullRequestUsecase = pullRequestUsecase;
