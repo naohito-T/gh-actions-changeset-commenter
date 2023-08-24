@@ -1,0 +1,27 @@
+name: Check Jest
+
+on:
+  pull_request:
+    paths:
+      - "packages/**"
+      - "!**.md"
+
+jobs:
+  check-jest:
+    strategy:
+      matrix:
+        node-version: [16.19.1]
+        os: [ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Composite Setup node
+        uses: ./.github/actions/setup/node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build check
+        run: yarn all:jest

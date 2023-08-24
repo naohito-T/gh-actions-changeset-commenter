@@ -1,11 +1,5 @@
 import { GitHubContext } from 'gha-core';
-import {
-  fetchPRBodyMessage,
-  fetchPendingPRsBaseTarget,
-  fetchMergedBasePRsTitle,
-  fetchMergedSelfPRs,
-  fetchPRsMergedInFromNotBase,
-} from '../../../../src/repository';
+import { ApiRepository } from '../../../../src/repository';
 
 const mockedGithubRestRepos = {
   get: jest.fn().mockReturnValue({ data: { body: 'mock' } }),
@@ -42,11 +36,13 @@ describe('api.repository.ts', () => {
     },
   } as unknown as GitHubContext['context'];
 
+  const r = new ApiRepository(github, context);
+
   it('fetchPRBodyMessage', async () => {
     expect.assertions(2);
     const prNumber = 1;
 
-    const txt = await fetchPRBodyMessage({ github, context, prNumber });
+    const txt = await r.fetchPRBodyMessage(prNumber);
 
     expect(mockedGithubRestRepos.get).toHaveBeenCalledWith({
       ...context.repo,
@@ -55,68 +51,57 @@ describe('api.repository.ts', () => {
     expect(txt).toBe('mock');
   });
 
-  it('fetchPendingPRsBaseTarget', async () => {
-    expect.assertions(1);
+  it('fetchPendingPRs', async () => {
+    expect.assertions(2);
     const base = 'test-main-branch';
 
-    await fetchPendingPRsBaseTarget({ github, context, base });
+    const result = await r.fetchPendingPRs({ base });
 
     expect(mockedGithubRestRepos.list).toHaveBeenCalledWith({
       ...context.repo,
       base,
       state: 'open',
+      sort: 'updated',
+      direction: 'desc',
+      per_page: 100,
     });
+
+    expect(result.data).toStrictEqual([
+      { merged_at: '2023/08/15', title: 'mock' },
+      { merged_at: '2023/08/22', title: 'mock2' },
+    ]);
   });
 
-  it('fetchMergedBasePRsTitle', async () => {
+  it('fetchMergedPRs', async () => {
     expect.assertions(2);
     const base = 'test-main-branch';
 
-    const result = await fetchMergedBasePRsTitle({ github, context, base });
+    const result = await r.fetchMergedPRs({ base });
 
     expect(mockedGithubRestRepos.list).toHaveBeenCalledWith({
       ...context.repo,
       base,
       state: 'closed',
+      sort: 'updated',
+      direction: 'desc',
       per_page: 100,
     });
 
-    expect(result).toStrictEqual(['mock', 'mock2']);
+    expect(result.data).toStrictEqual([
+      { merged_at: '2023/08/15', title: 'mock' },
+      { merged_at: '2023/08/22', title: 'mock2' },
+    ]);
   });
 
   it('fetchMergedSelfPRs', async () => {
     expect.assertions(1);
     const prNumber = 1;
 
-    await fetchMergedSelfPRs({ github, context, prNumber });
+    await r.fetchMergedSelfPRs({ prNumber });
 
     expect(mockedGithubRestRepos.list).toHaveBeenCalledWith({
       ...context.repo,
       pull_number: prNumber,
-      state: 'closed',
-      per_page: 100,
-    });
-  });
-
-  it('fetchPRsMergedInFromNotBase', async () => {
-    expect.assertions(3);
-    const base = 'test-main-branch';
-    const from = 'test-from-branch';
-
-    await fetchPRsMergedInFromNotBase({ github, context, base, from });
-
-    expect(mockedGithubRestRepos.list).toHaveBeenCalledTimes(2);
-
-    expect(mockedGithubRestRepos.list).toHaveBeenNthCalledWith(1, {
-      ...context.repo,
-      base: from,
-      state: 'closed',
-      per_page: 100,
-    });
-
-    expect(mockedGithubRestRepos.list).toHaveBeenNthCalledWith(2, {
-      ...context.repo,
-      base,
       state: 'closed',
       per_page: 100,
     });
