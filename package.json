@@ -1,6 +1,6 @@
 {
   "name": "gh-actions-utils-scripts",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "It is assumed to be used in actions/GitHub-script.",
   "private": "true",
   "main": "./dist/packages/gha-commenter/src/main.js",

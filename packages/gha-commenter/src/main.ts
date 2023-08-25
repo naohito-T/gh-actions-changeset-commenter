@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as core from '@actions/core';
 import { GitHubContext, IncorrectError, errorHandler } from 'gha-core';
 import { pullRequestUsecase, pushUsecase } from './usecases';
