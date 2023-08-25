@@ -34,7 +34,8 @@
     "all:p:check": "yarn workspaces run p:check",
     "all:p:write": "yarn workspaces run p:write",
     "all:build": "yarn workspaces run build",
-    "all:lint": "run-p "
+    "all:lint": "run-p ",
+    "postinstall": "chmod +x ./dist/packages/gha-commenter/src/main.js"
   },
   "devDependencies": {
     "@octokit/types": "^11.1.0",
