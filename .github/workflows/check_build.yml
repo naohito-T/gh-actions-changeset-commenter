@@ -1,4 +1,4 @@
-name: Check build
+name: Public package Check build
 
 on:
   pull_request:
@@ -24,4 +24,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Build check
-        run: yarn all:build
+        run: yarn commenter:build:prd
