@@ -2,7 +2,7 @@
   "name": "gha-commenter",
   "version": "1.0.0",
   "description": "It is assumed to be used in actions/GitHub-script.",
-  "main": "../../dist/packages/gha-commenter/src/main.js",
+  "main": "./dist/packages/gha-commenter/src/main.js",
   "keywords": [
     "utils",
     "github actions",
@@ -21,10 +21,11 @@
     "l:write": "eslint --fix --ext js,ts .",
     "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
     "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
-    "build": "tsc -p tsconfig.json && ncc build"
+    "build:dev": "tsc -p tsconfig.json && ncc build -m -s -o ../../dist",
+    "build:prd": "tsc -p tsconfig.json && ncc build -m -o ../../dist"
   },
   "dependencies": {
-    "gha-core": "link:../gha-core",
+    "gha-core": "*",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   }
