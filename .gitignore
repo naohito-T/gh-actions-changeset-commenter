@@ -22,7 +22,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-
+# soruce map
+index.js.map
+sourcemap-register.js
 
 # test
 

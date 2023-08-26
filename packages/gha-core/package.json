@@ -20,8 +20,7 @@
     "l:check": "eslint --max-warnings 0 --ext js,ts .",
     "l:write": "eslint --fix --ext js,ts .",
     "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
-    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
-    "build": "tsc -p tsconfig.json && ncc build"
+    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",

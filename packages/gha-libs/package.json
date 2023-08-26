@@ -15,7 +15,6 @@
   "scripts": {
     "t:check": "tsc --noEmit",
     "p:check": "prettier -c './**/*.{js,jsx,ts,tsx,json}'",
-    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'",
-    "build": "tsc -p tsconfig.json && ncc build"
+    "p:write": "prettier -w './**/*.{js,jsx,ts,tsx,json}'"
   }
 }

@@ -3,9 +3,9 @@
   "version": "1.0.7",
   "description": "It is assumed to be used in actions/GitHub-script.",
   "private": "true",
-  "main": "./dist/packages/gha-commenter/src/main.js",
+  "main": "./dist/index.js",
   "bin": {
-    "gha-commenter": "./dist/packages/gha-commenter/src/main.js"
+    "gha-comment": "./dist/index.js"
   },
   "keywords": [
     "utils",
@@ -20,9 +20,12 @@
     "packages/gha-commenter",
     "packages/gha-core"
   ],
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "commenter:build": "yarn workspace gha-commenter build",
-    "core:build": "yarn workspace gha-core build",
+    "commenter:build:dev": "yarn workspace gha-commenter build:dev",
+    "commenter:build:prd": "yarn workspace gha-commenter build:prd",
     "commenter:jest": "yarn workspace gha-commenter jest",
     "core:jest": "yarn workspace gha-core jest",
     "all:jest": "yarn workspaces run jest",
@@ -33,14 +36,9 @@
     "all:l:write": "yarn workspaces run l:write",
     "all:p:check": "yarn workspaces run p:check",
     "all:p:write": "yarn workspaces run p:write",
-    "all:build": "yarn workspaces run build",
-    "all:lint": "run-p ",
-    "postinstall": "chmod +x ./dist/packages/gha-commenter/src/main.js"
+    "all:lint": "run-p "
   },
-  "dependencies": {
-    "@actions/core": "^1.10.0",
-    "@actions/github": "^5.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@octokit/types": "^11.1.0",
     "@swc-node/jest": "^1.6.6",
