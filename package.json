@@ -1,6 +1,6 @@
 {
   "name": "gh-actions-utils-scripts",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "description": "It is assumed to be used in actions/GitHub-script.",
   "private": "true",
   "main": "./dist/packages/gha-commenter/src/main.js",
@@ -38,7 +38,6 @@
     "postinstall": "chmod +x ./dist/packages/gha-commenter/src/main.js"
   },
   "dependencies": {
-    "gha-core": "*",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   },
