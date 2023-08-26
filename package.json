@@ -38,6 +38,7 @@
     "postinstall": "chmod +x ./dist/packages/gha-commenter/src/main.js"
   },
   "dependencies": {
+    "gha-core": "1.0.0",
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1"
   },
