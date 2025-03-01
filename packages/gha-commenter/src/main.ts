@@ -1,24 +1,28 @@
 #!/usr/bin/env node
 
 import * as core from '@actions/core';
-import { GitHubContext, IncorrectError, errorHandler } from 'gha-core';
-import { pullRequestUsecase, pushUsecase } from './usecases';
-import { CustomGitHubContext } from './types';
+import * as github from '@actions/github';
+import { Context } from '@actions/github/lib/context';
+import { errorHandler, IncorrectError } from 'gha-core';
+import { container } from './container';
 
-/** @desc Pull Requestに対してbase ← fromの差分のPull Requestタイトルを反映する */
-export const main = async ({
-  github,
-  context,
-  base, // merge先
-}: GitHubContext & CustomGitHubContext): Promise<void> => {
+/**
+ * @description Pull Requestに対してbase ← fromの差分のPull Requestタイトルを反映する
+ */
+export const main = async (): Promise<void> => {
   try {
-    if (!base) throw new IncorrectError(`Missing parameters ${base}: Please README`);
+    // merge先のブランチ名
+    const base = core.getInput('base');
+    const octokit = github.getOctokit(core.getInput('github-token'));
+    const context = new Context();
+    const { pushUsecase, pullRequestUsecase } = container(octokit, context);
+
     switch (context.eventName) {
       case 'push':
-        await pushUsecase({ github, context, base });
+        await pushUsecase({ base });
         break;
       case 'pull_request':
-        await pullRequestUsecase({ github, context, base });
+        await pullRequestUsecase({ base });
         break;
       default:
         throw new IncorrectError('This event is not supported.');

@@ -1,5 +1,10 @@
 import { GitHubContext } from 'gha-core';
-import { ApiRepository } from '../../../../src/repository';
+import { GithubRepository } from '../../../../src/repository';
+import {
+  OctokitBranchCore,
+  OctokitCommitCore,
+  OctokitPullRequestCore,
+} from '../../../../../gha-core/index';
 
 const mockedGithubRestRepos = {
   get: jest.fn().mockReturnValue({ data: { body: 'mock' } }),
@@ -23,11 +28,11 @@ describe('api.repository.ts', () => {
     jest.clearAllMocks();
   });
 
-  const github = {
+  const octokit = {
     rest: {
       pulls: mockedGithubRestRepos,
     },
-  } as unknown as GitHubContext['github'];
+  } as unknown as GitHubContext['octokit'];
 
   const context = {
     repo: {
@@ -36,7 +41,11 @@ describe('api.repository.ts', () => {
     },
   } as unknown as GitHubContext['context'];
 
-  const r = new ApiRepository(github, context);
+  const r = new GithubRepository(
+    new OctokitBranchCore(octokit, context),
+    new OctokitPullRequestCore(octokit, context),
+    new OctokitCommitCore(octokit, context),
+  );
 
   it('fetchPRBodyMessage', async () => {
     expect.assertions(2);
