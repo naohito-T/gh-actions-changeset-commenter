@@ -12,18 +12,12 @@ jobs:
   auto-pull-request-prod:
     strategy:
       matrix:
-        node-version: [16.19.1]
         os: [ubuntu-22.04]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Composite Setup node
-        uses: ./.github/actions/setup/node
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Create pull request but not if develop
         run: |
@@ -37,7 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: naohito-T/gh-actions-changeset-commenter@v1.1.1
+      - uses: naohito-T/gh-actions-changeset-commenter@main
         name: Add branch comment
         with:
           base: main
