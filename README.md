@@ -1,18 +1,16 @@
-# gh-actions-utils-script
+# gh-actions-changeset-commenter
 
-It is assumed to be used in actions/GitHub-script.
+## Overview
 
-## 想定
+GitHub Actions Script for Changeset PR Comments
 
-actions/GitHub-scriptから使用するスクリプト群
-
-## Getting start.
+## Getting start
 
 ```sh
 # In root directory
 $ yarn install
 ```
 
-## Developer
+## CONTRIBUTING
 
 [CONTRIBUTING](./CONTRIBUTING.md)
