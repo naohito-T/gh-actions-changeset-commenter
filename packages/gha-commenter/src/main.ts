@@ -15,6 +15,9 @@ export const main = async (): Promise<void> => {
     const base = core.getInput('base');
     const octokit = github.getOctokit(core.getInput('github-token'));
     const context = new Context();
+    core.debug(
+      `Start gh-actions-changeset-commenter to main, base: ${base} eventName: ${context.eventName}`,
+    );
     const { pushUsecase, pullRequestUsecase } = container(octokit, context);
 
     switch (context.eventName) {

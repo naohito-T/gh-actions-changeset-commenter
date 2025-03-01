@@ -10,7 +10,7 @@ inputs:
   node-version:
     description: "Specified node version"
     required: false
-    default: "18.14.2"
+    default: "20.18.3"
   work-directory:
     description: "Destination working Directory"
     required: false
@@ -20,7 +20,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
         cache: yarn
