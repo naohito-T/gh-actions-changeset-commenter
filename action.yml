@@ -1,0 +1,22 @@
+name: gh-actions-changeset-commenter
+
+description: GitHub Actions automation project.
+
+author: naohito-T
+
+inputs:
+  base:
+    description: "The base branch to merge into"
+    required: true
+  github-token:
+    description: "The token used when calling GitHub API"
+    required: false
+    default: ${{ github.token }}
+
+branding:
+  icon: git-pull-request
+  color: orange
+
+runs:
+  using: node20
+  main: dist/index.js

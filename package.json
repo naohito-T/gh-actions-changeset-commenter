@@ -24,6 +24,8 @@
     "dist"
   ],
   "scripts": {
+    "build:dev": "yarn workspace gha-commenter build:dev",
+    "build:prd": "yarn workspace gha-commenter build:prd",
     "commenter:build:dev": "yarn workspace gha-commenter build:dev",
     "commenter:build:prd": "yarn workspace gha-commenter build:prd",
     "commenter:jest": "yarn workspace gha-commenter jest",
