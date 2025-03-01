@@ -1,8 +1,10 @@
-import { context } from '@actions/github';
-import { GitHub } from '@actions/github/lib/utils';
+import type { context } from '@actions/github';
+import type { GitHub } from '@actions/github/lib/utils';
 
-/** @desc GitHub CIコンテキストから注入されるコンテキスト */
+/**
+ * @description GitHub CIコンテキストから注入されるコンテキスト
+ */
 export type GitHubContext = {
-  github: InstanceType<typeof GitHub>;
+  octokit: InstanceType<typeof GitHub>;
   context: typeof context;
 };

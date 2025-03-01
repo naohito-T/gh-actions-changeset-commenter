@@ -4,59 +4,59 @@ import {
   UpdatePullRequestMessage,
   CustomArgs,
 } from '../types';
+import type { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 
-/** @desc プルリクエストを取得する */
-export const fetchPullRequest = async ({
-  github,
-  context,
-  prNumber,
-  ...args // この部分が任意のオブジェクトを受け取るための変更
-}: GitHubContext & TargetPullRequestNumber & CustomArgs) => {
-  return await github.rest.pulls.get({
-    ...context.repo,
-    pull_number: prNumber,
-    ...args,
-  });
-};
+export interface IPullRequestCore {
+  /**
+   * @desc プルリクエストを取得する
+   */
+  fetchPullRequest: (
+    args: TargetPullRequestNumber & CustomArgs,
+  ) => Promise<RestEndpointMethodTypes['pulls']['get']['response']>;
+  /**
+   * @desc baseに向いているプルリクエスト一覧を取得する
+   */
+  fetchPullRequestList: (
+    args: { base?: string } & CustomArgs,
+  ) => Promise<RestEndpointMethodTypes['pulls']['list']['response']>;
+  /**
+   * @desc プルリクエストにマージメッセージを反映させる
+   */
+  updatePullRequestMessage: (
+    args: UpdatePullRequestMessage,
+  ) => Promise<RestEndpointMethodTypes['pulls']['update']['response']>;
+}
 
-/** @desc baseに向いているプルリクエスト一覧を取得する */
-export const fetchPullRequestList = async ({
-  github,
-  context,
-  base,
-  ...args // この部分が任意のオブジェクトを受け取るための変更
-}: GitHubContext & { base?: string } & CustomArgs) => {
-  return await github.rest.pulls.list({
-    ...context.repo, // owner && repo
-    base, // PR target base branch
-    ...args,
-  });
-};
+export class OctokitPullRequestCore implements IPullRequestCore {
+  constructor(
+    private readonly octokit: GitHubContext['octokit'],
+    private readonly context: GitHubContext['context'],
+  ) {}
 
-/** @desc fromに向いているプルリクをさガス */
-// export const fetchFromPullRequestList = async ({
-//   github,
-//   context,
-//   base,
-//   ...args // この部分が任意のオブジェクトを受け取るための変更
-// }: GitHubContext & { base?: string } & CustomArgs) => {
-//   return await github.rest.pulls.list({
-//     ...context.repo, // owner && repo
-//     base, // PR target base branch
-//     ...args,
-//   });
-// };
+  public fetchPullRequest = async ({
+    prNumber,
+    ...args // この部分が任意のオブジェクトを受け取るための変更
+  }: TargetPullRequestNumber & CustomArgs) =>
+    await this.octokit.rest.pulls.get({
+      ...this.context.repo,
+      pull_number: prNumber,
+      ...args,
+    });
 
-/** @desc プルリクエストにマージメッセージを反映させる */
-export const updatePullRequestMessage = async ({
-  github,
-  context,
-  prNumber,
-  body,
-}: GitHubContext & UpdatePullRequestMessage) => {
-  await github.rest.pulls.update({
-    ...context.repo,
-    pull_number: prNumber,
-    body,
-  });
-};
+  public fetchPullRequestList = async ({
+    base,
+    ...args // この部分が任意のオブジェクトを受け取るための変更
+  }: { base?: string } & CustomArgs) =>
+    await this.octokit.rest.pulls.list({
+      ...this.context.repo, // owner && repo
+      base, // PR target base branch
+      ...args,
+    });
+
+  public updatePullRequestMessage = async ({ prNumber, body }: UpdatePullRequestMessage) =>
+    await this.octokit.rest.pulls.update({
+      ...this.context.repo,
+      pull_number: prNumber,
+      body,
+    });
+}

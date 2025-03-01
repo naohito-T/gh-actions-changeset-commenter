@@ -1,37 +1,65 @@
-import {
-  fetchPullRequest,
-  fetchPullRequestList,
-  GitHubContext,
-  TargetPullRequestNumber,
-  fetchListCommit,
-  updatePullRequestMessage,
-} from 'gha-core';
+import { TargetPullRequestNumber, IBranchCore, IPullRequestCore, ICommitCore } from 'gha-core';
 import { BaseBranch } from '../types';
+import type { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 
-/** @desc coreライブラリに接続するRepository */
-export class ApiRepository {
+/**
+ * @desc coreライブラリに接続するRepository
+ */
+export interface IGithubRepository {
+  /**
+   * @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する
+   */
+  fetchPRBodyMessage: (prNumber: TargetPullRequestNumber['prNumber']) => Promise<string | null>;
+  /**
+   * @desc 指定のbase branchに向いているOpen PRsを取得する
+   */
+  fetchPendingPRs: (
+    args: BaseBranch & { per_page?: number },
+  ) => Promise<RestEndpointMethodTypes['pulls']['list']['response']>;
+  /**
+   * @desc 指定のbase branchに向いておりmergeされたPRsを取得する
+   */
+  fetchMergedPRs: (
+    args: BaseBranch & { per_page?: number },
+  ) => Promise<RestEndpointMethodTypes['pulls']['list']['response']>;
+  /**
+   * @desc 自身にmergeされたプルリクエストを取得する
+   */
+  fetchMergedSelfPRs: (
+    args: TargetPullRequestNumber,
+  ) => Promise<RestEndpointMethodTypes['pulls']['list']['response']>;
+  /**
+   * @desc 対象のPR bodyをupdateする
+   */
+  updatePrMessage: (args: TargetPullRequestNumber & { body: string[] }) => Promise<void>;
+  /**
+   * @desc 指定されたbaseブランチの最新マージコミットを取得する
+   * @note shaにはdevelopなどのブランチ名でもよい
+   * @note Merge pull request #29 hoge などの際sん1件を取得する
+   */
+  fetchLatestMergeCommit: (
+    args: BaseBranch,
+  ) => Promise<RestEndpointMethodTypes['repos']['listCommits']['response']['data'][0]>;
+}
+
+export class GithubRepository implements IGithubRepository {
   constructor(
-    private readonly github: GitHubContext['github'],
-    private readonly context: GitHubContext['context'],
+    private readonly branch: IBranchCore,
+    private readonly pullRequest: IPullRequestCore,
+    private readonly commit: ICommitCore,
   ) {}
 
-  /** @desc Open PRでtargetが指定のbase branchに向いている一覧を取得する */
   public fetchPRBodyMessage = async (
     prNumber: TargetPullRequestNumber['prNumber'],
   ): Promise<string | null> => {
-    const pr = await fetchPullRequest({
-      github: this.github,
-      context: this.context,
+    const pr = await this.pullRequest.fetchPullRequest({
       prNumber,
     });
     return pr.data.body;
   };
 
-  /** @desc 指定のbase branchに向いているOpen PRsを取得する */
   public fetchPendingPRs = async ({ base, per_page = 100 }: BaseBranch & { per_page?: number }) =>
-    await fetchPullRequestList({
-      github: this.github,
-      context: this.context,
+    await this.pullRequest.fetchPullRequestList({
       base,
       state: 'open',
       sort: 'updated', // 最新の更新順にソート
@@ -39,11 +67,8 @@ export class ApiRepository {
       per_page,
     });
 
-  /** @desc 指定のbase branchに向いておりmergeされたPRsを取得する */
   public fetchMergedPRs = async ({ base, per_page = 100 }: BaseBranch & { per_page?: number }) =>
-    await fetchPullRequestList({
-      github: this.github,
-      context: this.context,
+    await this.pullRequest.fetchPullRequestList({
       base,
       state: 'closed',
       sort: 'updated', // 最新の更新順にソート
@@ -51,38 +76,25 @@ export class ApiRepository {
       per_page,
     });
 
-  /** @desc 自身にmergeされたプルリクエストを取得する */
   public fetchMergedSelfPRs = async ({ prNumber }: TargetPullRequestNumber) =>
-    await fetchPullRequestList({
-      github: this.github,
-      context: this.context,
+    await this.pullRequest.fetchPullRequestList({
       pull_number: prNumber,
       state: 'closed',
       per_page: 100,
     });
 
-  /** @desc 対象のPR bodyをupdateする */
   public updatePrMessage = async ({
     prNumber,
     body,
   }: TargetPullRequestNumber & { body: string[] }) => {
-    await updatePullRequestMessage({
-      github: this.github,
-      context: this.context,
+    await this.pullRequest.updatePullRequestMessage({
       prNumber,
       body: `${body.join('\n')}`,
     });
   };
 
-  /**
-   * @desc 指定されたbaseブランチの最新マージコミットを取得する
-   * @note shaにはdevelopなどのブランチ名でもよい
-   * @note Merge pull request #29 hoge などの際sん1件を取得する
-   */
   public fetchLatestMergeCommit = async ({ base }: BaseBranch) => {
-    const baseCommits = await fetchListCommit({
-      github: this.github,
-      context: this.context,
+    const baseCommits = await this.commit.fetchListCommit({
       sha: base,
       per_page: 10,
     });
